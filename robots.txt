@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /_backup/
+Disallow: /old/
+Disallow: /uploads/
+
+Sitemap: https://petrankers.com/sitemap.xml
