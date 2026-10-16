@@ -1558,8 +1558,8 @@ body.pr{padding-bottom:0!important}
 .gm-rt s{position:relative;display:inline-block;width:42px;height:8px;background:linear-gradient(90deg,#FBBC05 calc((var(--r) / 5) * 100%),#DADCE0 0);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 10'%3E%3Cg fill='%23000'%3E%3Cpath id='s' d='M5 0l1.5 3.2 3.5.4-2.6 2.4.7 3.5L5 7.8 1.9 9.5l.7-3.5L0 3.6l3.5-.4z'/%3E%3Cuse href='%23s' x='10'/%3E%3Cuse href='%23s' x='20'/%3E%3Cuse href='%23s' x='30'/%3E%3Cuse href='%23s' x='40'/%3E%3C/g%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 10'%3E%3Cg fill='%23000'%3E%3Cpath id='s' d='M5 0l1.5 3.2 3.5.4-2.6 2.4.7 3.5L5 7.8 1.9 9.5l.7-3.5L0 3.6l3.5-.4z'/%3E%3Cuse href='%23s' x='10'/%3E%3Cuse href='%23s' x='20'/%3E%3Cuse href='%23s' x='30'/%3E%3Cuse href='%23s' x='40'/%3E%3C/g%3E%3C/svg%3E") center/100% 100% no-repeat}
 .gm-rt small{color:#70757A;font-size:.56rem}
 .gm-th{flex:none;width:34px;height:34px;border-radius:6px;background-size:cover;background-position:center}
-.gm-th--1{background-image:url(images/ind-dog-groomer.png)}
-.gm-th--2{background-image:url(images/ind-pet-boarding.png)}
+.gm-th--1{background-image:url(images/ind-dog-groomer.webp)}
+.gm-th--2{background-image:url(images/ind-pet-boarding.webp)}
 .gm-th--3{background-color:#E8EAED}
 .gm-res.is-me{margin:0 -4px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,106,0,.45);background:#FFF6EC;animation:prResGlow 2.6s ease-in-out infinite}
 @media(max-width:560px){.gm-tabs{display:none}.gm-map{height:76px}.gm-res:last-child{display:none}.gm-th{width:26px;height:26px}}
@@ -2215,3 +2215,38 @@ main:has(.pr-contact) .pr-arch-hero{padding-bottom:clamp(110px,11vw,150px)!impor
   .pr-dock__menu{min-width:min(236px,calc(100vw - 32px))}
 }
 @media(max-width:340px){.pr .pr-dock__btn,.pr .pr-dock .pr-dock__cta{font-size:.82rem}.pr .pr-dock .pr-dock__cta svg{display:none}}
+
+/* ===== mobile performance + stability pass ===== */
+/* fallback fonts sized to match web fonts, so text doesn't reflow when they load */
+@font-face{font-family:"Geist Fallback";src:local("Arial"),local("Helvetica"),local("Roboto");size-adjust:104%;ascent-override:94%;descent-override:24%;line-gap-override:0%}
+@font-face{font-family:"Bricolage Fallback";src:local("Arial"),local("Helvetica"),local("Roboto");size-adjust:101%;ascent-override:92%;descent-override:26%;line-gap-override:0%}
+@font-face{font-family:"Instrument Fallback";src:local("Times New Roman"),local("Times"),local("Georgia");size-adjust:92%;ascent-override:96%;descent-override:26%;line-gap-override:0%}
+:root{--pr-font:"Bricolage Grotesque","Bricolage Fallback",system-ui,-apple-system,"Segoe UI",sans-serif;--pr-head:"Geist","Geist Fallback",system-ui,sans-serif;--pr-serif:"Instrument Serif","Instrument Fallback",Georgia,serif}
+/* clip (not hidden) stops sideways wobble without creating a second scroll box */
+html,body.pr{overflow-x:clip}
+@supports not (overflow:clip){html,body.pr{overflow-x:hidden}}
+/* checklist items stayed shifted 24px right outside the compare cards */
+.pr-checks li,.pr-xs li{transform:none}
+.pr-compare .pr-checks li{transform:translateX(24px)}.pr-compare .pr-xs li{transform:translateX(-24px)}
+.pr-compare .is-in li{transform:none}
+/* stable viewport unit: no jump when the mobile address bar shows/hides */
+@supports (height:100lvh){.pr-ix-orn{height:100lvh;margin-bottom:-100lvh}}
+@media(max-width:1024px){
+  html{scroll-behavior:auto}
+  /* stop paint-heavy looping effects (blur, box-shadow, svg filters) */
+  .pr-glow,.pr-geo__card,.pr-geo__glass,.pr-vchip,.pr-vcard__media,.pr-cmp-tag--win,.pr-vs,.pr-compare .is-win::before,.pr-checks li::before,.pr-ix-rings i,.pr-audit__glow,.pr-audit__tag,.pr-wordmark__glow,.pr-wordmark__t--blur,.pr-wordmark__t--smear,.pr-found__save,.pr-aeo__viz--net b,.pr-aeo__viz--net::before,.pr-aeo__viz--code::after,.pr-venn__c--l,.pr-venn__c--r,.pr-venn__mid span,.pr-lap__res.is-me,.pr-lap__tag,.gm-res.is-me,.pr-plan__pop,.pr-multi__ring,.pr-contact__live,.wd-tag--a,.wd-ph{animation:none!important}
+  .pr-glow{filter:blur(60px)}
+  /* backdrop blur repaints on every scroll frame on phones; use solid tints */
+  .pr-nav__bar,.pr-chat,.pr-pill,.pr-geo__glass,.pr-vchip,.pr-gchip,.sv-node,.sv-list,.pr-ai__label,.pr-tv__n,.pr-tl__card,.pr-vs__col--bad,.pr-vs__col--good,.pr-shero__chips span,.pr-s8__card,.pr .pr-dock{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  .pr-nav__bar{background:rgba(255,255,255,.97)}
+  .pr .pr-dock{background:linear-gradient(180deg,#14223F,#0A1224)}
+  .pr-nav,.pr .pr-dock{will-change:transform}
+  [data-reveal]{transform:translateY(14px)}
+  [data-reveal].is-in{transform:none}
+}
+
+@media(max-width:1024px){
+  .pr-glow,.pr .pr-glow,.pr-vs::before,.pr-vsec--light .pr-vs::before,.pr-vs2__glow,.pr-audit__glow{filter:none!important}
+  .pr-grain::after{mix-blend-mode:normal;opacity:.04}
+  .pr-ribbon__track,.pr-badge-spin__ring{will-change:transform}
+}
