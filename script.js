@@ -460,4 +460,30 @@
       dd.addEventListener('keydown', function (e) { if (e.key === 'Escape') { set(false); btn.focus(); } });
     });
   });
+/* timeline fill on mobile */
+  (function () {
+    var tl = document.querySelector('.pr-tl'); if (!tl) return;
+    var tick = function () { var steps = tl.querySelectorAll('.pr-tl__step'), last = steps[steps.length - 1], ld = last && last.querySelector('.pr-tl__dot'); if (ld) tl.style.setProperty('--tl-h', (last.offsetTop + ld.offsetTop + ld.offsetHeight / 2 - 22) + 'px'); var r = tl.getBoundingClientRect(), vh = window.innerHeight; var p = (vh * 0.6 - r.top) / r.height; tl.style.setProperty('--tl-p', Math.max(0, Math.min(1, p)).toFixed(3)); };
+    window.addEventListener('scroll', tick, { passive: true }); window.addEventListener('resize', tick); tick();
+  })();
+/* industries accordion (mobile) */
+  $$('[data-ix-track]').forEach(function (t) {
+    var cards = [].slice.call(t.querySelectorAll('.pr-ix-card'));
+    cards.forEach(function (c, i) {
+      var h = c.querySelector('.pr-ix-h'), im = c.querySelector('.pr-ix-media img');
+      var id = 'pr-ix-p' + Math.random().toString(36).slice(2, 7);
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pr-ix-acc'; b.setAttribute('aria-expanded', i === 0 ? 'true' : 'false');
+      b.innerHTML = '<span class="pr-ix-acc__n">' + String(i + 1).padStart(2, '0') + '</span><span class="pr-ix-acc__t"></span>' + (im ? '<img alt="" width="88" height="88" loading="lazy" src="' + im.getAttribute('src') + '">' : '') + '<span class="pr-ix-acc__ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>';
+      b.querySelector('.pr-ix-acc__t').textContent = h ? h.textContent : '';
+      c.insertBefore(b, c.firstChild);
+      if (i === 0) c.classList.add('is-open');
+      b.addEventListener('click', function () {
+        var open = !c.classList.contains('is-open');
+        cards.forEach(function (o) { o.classList.remove('is-open'); var ob = o.querySelector('.pr-ix-acc'); if (ob) ob.setAttribute('aria-expanded', 'false'); });
+        if (open) { c.classList.add('is-open'); b.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+  });
 })();
+
