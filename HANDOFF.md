@@ -44,6 +44,10 @@ Phase 2 additions (also built and verified):
 
 ## When the design arrives: integration steps
 
+**First check which kind of design it is:**
+- **Designed from scratch to `docs/CLAUDE-DESIGN-SPEC.md`** (same CSS variable names, same template class names, `.prose` styled): follow the short checklist in Part 3 of that file. Porting is mostly copy-paste.
+- **Existing or freeform design** (an already-live site, Tailwind, different class names): follow the full steps below.
+
 The design layer is isolated in `src/design/`. Do this in order:
 
 1. **Tokens:** pull colors, fonts, radius, spacing from the design into `src/design/tokens.css`. If the design loads Google Fonts, add the `<link>` in `BaseLayout.astro` (named slot `head` or directly in `<head>`).

@@ -57,7 +57,7 @@ Then add the custom domain in the host dashboard.
 
 1. Use this repo as a template on GitHub ("Use this template") or copy it.
 2. Edit `src/site.config.ts` (name, URL, NAP, nav, CTA).
-3. Drop in the design: `src/design/` (tokens, CSS, header, footer) and core pages in `src/pages/`. See `HANDOFF.md`.
+3. Drop in the design: `src/design/` (tokens, CSS, header, footer) and core pages in `src/pages/`. See `HANDOFF.md`. **Designing from scratch?** Paste the prompt in `docs/CLAUDE-DESIGN-SPEC.md` into Claude Design first, so the design ports in minutes.
 4. Replace `public/logo.svg`, `public/favicon.svg`, `public/og-default.jpg`.
 5. Set authors in `src/content/authors.json` and categories in `src/content/categories.json`.
 6. Delete the sample entries in `src/content/` (posts, case study, service, locations).

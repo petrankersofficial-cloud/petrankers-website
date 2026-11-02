@@ -3,7 +3,7 @@
 This file is the operating manual for any AI agent (Claude Code, Claude Desktop, OpenCode, Kilo Code, Cursor, etc.) working in this repo. Read it fully before creating or editing content.
 
 **Which task are you doing?**
-- **Setting up a new client site, integrating a design, or continuing development of this starter:** read `HANDOFF.md` first (project goal, what is built, design integration steps, decisions already made), then this file.
+- **Setting up a new client site, integrating a design, or continuing development of this starter:** read `HANDOFF.md` first (project goal, what is built, design integration steps, decisions already made), then this file. For designs made to the spec, `docs/CLAUDE-DESIGN-SPEC.md` has the fast porting checklist.
 - **Publishing content** (blog post, case study, service page, location pages, WordPress import): this file is all you need.
 
 Requirements: Node.js 22.23.4 or newer. Run `npm install` once after cloning.
