@@ -1,0 +1,103 @@
+---
+/**
+ * SINGLE CASE STUDY TEMPLATE. Data first: stat cards and project facts above the story.
+ */
+import { Image, getImage } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import StatCards from '../components/blog/StatCards.astro';
+import FAQ from '../components/blog/FAQ.astro';
+import CTA from '../components/blog/CTA.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import { caseStudyUrl, getCaseStudies, type CaseStudy } from '../lib/content';
+import { articleSchema, breadcrumbSchema, faqSchema } from '../lib/schema';
+
+interface Props { study: CaseStudy }
+const { study } = Astro.props;
+const d = study.data;
+const { Content } = await render(study);
+const author = d.author ? await getEntry(d.author) : undefined;
+const url = caseStudyUrl(study);
+const og = await getImage({ src: d.featuredImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+const more = (await getCaseStudies()).filter((c) => c.id !== study.id).slice(0, 3);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Case Studies', url: '/case-studies/' },
+  { name: d.title, url },
+];
+---
+
+<BaseLayout
+  metaTitle={d.metaTitle}
+  metaDescription={d.metaDescription}
+  canonical={d.canonical}
+  noindex={d.noindex}
+  ogType="article"
+  ogImage={og.src}
+  ogImageAlt={d.featuredImageAlt}
+  publishDate={d.publishDate}
+  updatedDate={d.updatedDate}
+  schema={[
+    articleSchema({
+      type: 'Article',
+      url,
+      headline: d.title,
+      description: d.metaDescription,
+      image: og.src,
+      publishDate: d.publishDate,
+      updatedDate: d.updatedDate,
+      author: author ? { name: author.data.name, url: author.data.url, sameAs: author.data.sameAs } : undefined,
+      keywords: [d.focusKeyword, ...d.secondaryKeywords, d.industry, ...d.services].filter(Boolean) as string[],
+      section: 'Case Studies',
+    }),
+    breadcrumbSchema(crumbs),
+    faqSchema(d.faq),
+  ]}
+>
+  <article class="container">
+    <header class="post-header">
+      <Breadcrumbs items={crumbs} />
+      <h1>{d.title}</h1>
+      <p class="muted" style="font-size:1.15rem">{d.excerpt}</p>
+    </header>
+
+    <StatCards results={d.results} />
+
+    <dl class="cs-facts">
+      <div><dt>Client</dt><dd>{d.client}</dd></div>
+      <div><dt>Industry</dt><dd>{d.industry}</dd></div>
+      {d.location && <div><dt>Location</dt><dd>{d.location}</dd></div>}
+      <div><dt>Services</dt><dd>{d.services.join(', ')}</dd></div>
+      {d.duration && <div><dt>Timeline</dt><dd>{d.duration}</dd></div>}
+    </dl>
+
+    <figure class="post-featured">
+      <Image src={d.featuredImage} alt={d.featuredImageAlt} widths={[640, 960, 1280]} sizes="(max-width: 1200px) 100vw, 1200px" loading="eager" fetchpriority="high" />
+    </figure>
+
+    <div class="prose" style="margin-inline:auto">
+      <Content />
+      {d.testimonial && (
+        <blockquote class="testimonial">
+          <p>"{d.testimonial.quote}"</p>
+          <footer>{d.testimonial.name}{d.testimonial.role && <>, {d.testimonial.role}</>}</footer>
+        </blockquote>
+      )}
+      <FAQ items={d.faq} />
+      <CTA cta={d.cta} />
+    </div>
+
+    {more.length > 0 && (
+      <section class="related">
+        <h2>More Case Studies</h2>
+        <div class="post-grid">
+          {more.map((c) => (
+            <PostCard href={caseStudyUrl(c)} title={c.data.title} excerpt={c.data.excerpt} image={c.data.featuredImage} imageAlt={c.data.featuredImageAlt} date={c.data.publishDate} label={c.data.industry} headingLevel="h3" />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>

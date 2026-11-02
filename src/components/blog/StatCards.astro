@@ -1,0 +1,14 @@
+---
+interface Props { results: { metric: string; before?: string; after: string; change?: string }[] }
+const { results } = Astro.props;
+---
+<div class="stat-cards">
+  {results.map((r) => (
+    <div class="stat-card">
+      <div class="stat-card__metric">{r.metric}</div>
+      <div class="stat-card__after">{r.after}</div>
+      {r.before && <div class="stat-card__before">from {r.before}</div>}
+      {r.change && <div class="stat-card__change">{r.change}</div>}
+    </div>
+  ))}
+</div>

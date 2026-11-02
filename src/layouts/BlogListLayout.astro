@@ -1,0 +1,68 @@
+---
+/** Blog archive template: used by /blog/, /blog/page/N/, and category archives. */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import Pagination from '../components/blog/Pagination.astro';
+import CategoryPills from '../components/blog/CategoryPills.astro';
+import { postUrl, type Post } from '../lib/content';
+import { breadcrumbSchema } from '../lib/schema';
+import { getEntry } from 'astro:content';
+
+interface Props {
+  posts: Post[]; // posts on this page
+  usedCategories: string[];
+  current: number;
+  last: number;
+  base: string; // "/blog/" or "/blog/category/x/"
+  heading: string;
+  intro: string;
+  metaTitle: string;
+  metaDescription: string;
+  activeCategory?: string;
+  crumbs: { name: string; url: string }[];
+}
+const p = Astro.props;
+const pageUrl = p.current === 1 ? p.base : `${p.base}page/${p.current}/`;
+const prev = p.current > 1 ? (p.current === 2 ? p.base : `${p.base}page/${p.current - 1}/`) : undefined;
+const next = p.current < p.last ? `${p.base}page/${p.current + 1}/` : undefined;
+const titleSuffix = p.current > 1 ? ` - Page ${p.current}` : '';
+const catNames = new Map(
+  await Promise.all(p.posts.map(async (x) => [x.data.category.id, (await getEntry(x.data.category)).data.name] as const)),
+);
+---
+
+<BaseLayout
+  metaTitle={p.metaTitle + titleSuffix}
+  metaDescription={p.metaDescription}
+  prev={prev}
+  next={next}
+  schema={[
+    breadcrumbSchema(p.crumbs),
+    {
+      '@type': 'CollectionPage',
+      name: p.heading,
+      url: pageUrl,
+      hasPart: p.posts.map((x) => ({ '@type': 'BlogPosting', headline: x.data.title, url: postUrl(x) })),
+    },
+  ]}
+>
+  <section class="container page-hero">
+    <Breadcrumbs items={p.crumbs} />
+    <h1>{p.heading}</h1>
+    <p class="muted">{p.intro}</p>
+  </section>
+  <section class="container">
+    <CategoryPills active={p.activeCategory} used={p.usedCategories} />
+    {p.posts.length === 0 ? (
+      <p>No posts yet.</p>
+    ) : (
+      <div class="post-grid">
+        {p.posts.map((x) => (
+          <PostCard href={postUrl(x)} title={x.data.title} excerpt={x.data.excerpt} image={x.data.featuredImage} imageAlt={x.data.featuredImageAlt} date={x.data.publishDate} label={catNames.get(x.data.category.id)} />
+        ))}
+      </div>
+    )}
+    <Pagination current={p.current} last={p.last} base={p.base} />
+  </section>
+</BaseLayout>

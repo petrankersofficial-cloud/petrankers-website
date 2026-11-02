@@ -1,0 +1,11 @@
+[
+  {
+    "id": "editorial-team",
+    "name": "Editorial Team",
+    "role": "Content Team",
+    "bio": "Our in-house team writes practical guides based on real jobs we complete every week.",
+    "avatar": "/authors/editorial-team.svg",
+    "url": "/about/",
+    "sameAs": []
+  }
+]

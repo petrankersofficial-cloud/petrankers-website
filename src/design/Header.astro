@@ -1,0 +1,20 @@
+---
+/** PLACEHOLDER HEADER: replace markup with the client's Claude Design header. Keep `site.nav` as the link source. */
+import { site } from '../site.config';
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">{site.name}</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {site.nav.map((item) => (
+          <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a class="btn" href={`tel:${site.business.phone.replace(/[^\d+]/g, '')}`}>{site.business.phone}</a>
+  </div>
+</header>

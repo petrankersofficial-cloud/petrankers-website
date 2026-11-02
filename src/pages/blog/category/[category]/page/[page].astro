@@ -1,0 +1,29 @@
+---
+import BlogListLayout from '../../../../../layouts/BlogListLayout.astro';
+import { categoryArchives } from '../../../../../lib/archive';
+
+export async function getStaticPaths() {
+  return (await categoryArchives()).flatMap(({ category, pages, usedCategories }) =>
+    pages.slice(1).map((posts, i) => ({
+      params: { category: category.id, page: String(i + 2) },
+      props: { category, posts, current: i + 2, last: pages.length, usedCategories },
+    })),
+  );
+}
+const { category, posts, current, last, usedCategories } = Astro.props;
+const base = `/blog/category/${category.id}/`;
+---
+
+<BlogListLayout
+  posts={posts}
+  usedCategories={usedCategories}
+  current={current}
+  last={last}
+  base={base}
+  heading={category.data.name}
+  intro={category.data.description}
+  metaTitle={`${category.data.name} Articles`}
+  metaDescription={category.data.description}
+  activeCategory={category.id}
+  crumbs={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }, { name: category.data.name, url: base }, { name: `Page ${current}`, url: `${base}page/${current}/` }]}
+/>

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "guides",
+    "name": "Guides",
+    "description": "Step-by-step guides and practical how-tos."
+  },
+  {
+    "id": "costs",
+    "name": "Costs and Pricing",
+    "description": "What things cost, what drives the price, and how to budget."
+  },
+  {
+    "id": "news",
+    "name": "News",
+    "description": "Company news and local updates."
+  }
+]

@@ -1,0 +1,5 @@
+# 301 redirects. Cloudflare Pages + Netlify both read this file.
+# Format: /old-path/  /new-path/  301
+# Add one line whenever a slug changes or an old WordPress URL needs to point to the new site.
+# Example for migrated WordPress posts that lived at the root:
+# /old-wordpress-post/  /blog/old-wordpress-post/  301

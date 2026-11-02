@@ -1,0 +1,48 @@
+# SCHEDULED PUBLISHING (free).
+# Static sites only change when they rebuild, so future-dated posts need a rebuild on their date.
+# Every day this checks for posts whose publishDate is today and, only if there are any,
+# calls your host's build hook. No posts due = no build used.
+#
+# Setup (one time):
+#   Netlify:    Site settings > Build & deploy > Build hooks > Add hook > copy URL
+#   Cloudflare: Pages project > Settings > Builds > Deploy hooks > Add > copy URL
+#   GitHub:     repo Settings > Secrets and variables > Actions > New secret
+#               name: DEPLOY_HOOK_URL   value: the hook URL
+name: Scheduled publish
+
+on:
+  schedule:
+    - cron: '5 11 * * *' # 11:05 UTC daily (06:05 US Central). Change to suit the client.
+  workflow_dispatch:
+
+jobs:
+  publish-due-posts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Find posts due today
+        id: due
+        run: |
+          COUNT=$(node -e '
+            const fs=require("fs");
+            const today=new Date().toISOString().slice(0,10);
+            let n=0;
+            for (const f of fs.globSync("src/content/{blog,case-studies}/*/index.{md,mdx}")) {
+              const fm=(fs.readFileSync(f,"utf8").match(/^---\n([\s\S]*?)\n---/)||[])[1]||"";
+              const d=(fm.match(/^publishDate:\s*["\x27]?([0-9-]{10})/m)||[])[1];
+              const draft=/^draft:\s*true/m.test(fm);
+              if (d===today && !draft) { console.error("due: "+f); n++; }
+            }
+            console.log(n);
+          ')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+      - name: Trigger build hook
+        if: steps.due.outputs.count != '0' || github.event_name == 'workflow_dispatch'
+        env:
+          HOOK: ${{ secrets.DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "DEPLOY_HOOK_URL secret not set"; exit 1; fi
+          curl -fsS -X POST "$HOOK" && echo "Build triggered"

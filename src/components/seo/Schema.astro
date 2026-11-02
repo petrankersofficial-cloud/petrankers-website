@@ -1,0 +1,15 @@
+---
+/**
+ * JSON-LD structured data. Pass an array of schema objects (use helpers in src/lib/schema.ts).
+ * Organization/LocalBusiness is always included.
+ */
+import { organizationSchema } from '../../lib/schema';
+
+interface Props {
+  items?: Record<string, unknown>[];
+}
+const { items = [] } = Astro.props;
+const graph = { '@context': 'https://schema.org', '@graph': [organizationSchema(), ...items] };
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(graph)} />

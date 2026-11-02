@@ -1,0 +1,20 @@
+---
+import BlogListLayout from '../../layouts/BlogListLayout.astro';
+import { blogArchive } from '../../lib/archive';
+import { site } from '../../site.config';
+
+const { pages, usedCategories } = await blogArchive();
+---
+
+<BlogListLayout
+  posts={pages[0]}
+  usedCategories={usedCategories}
+  current={1}
+  last={pages.length}
+  base="/blog/"
+  heading="Blog"
+  intro={`Guides, costs, and tips from the ${site.name} team.`}
+  metaTitle="Blog"
+  metaDescription={`Read practical guides, cost breakdowns, and expert tips from the ${site.name} team.`}
+  crumbs={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }]}
+/>
