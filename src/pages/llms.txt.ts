@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * /llms.txt: a plain-text map of the site for AI assistants and answer engines (llmstxt.org format).
  * Generated on every build, so new posts and pages appear automatically.

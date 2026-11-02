@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {

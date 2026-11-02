@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * SITE QA: crawls the built site in dist/ and checks every page.
  * Runs as the last step of `npm run check`, so a broken site never deploys.

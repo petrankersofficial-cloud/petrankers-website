@@ -1,4 +1,5 @@
 ---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 interface Props { current: number; last: number; base: string } // base like "/blog/"
 const { current, last, base } = Astro.props;
 const href = (n: number) => (n === 1 ? base : `${base}page/${n}/`);

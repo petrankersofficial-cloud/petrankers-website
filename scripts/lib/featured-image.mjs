@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * Branded featured image generator (free, offline, uses sharp).
  * Reads brand colors from src/design/tokens.css and the site name from site.config.ts,

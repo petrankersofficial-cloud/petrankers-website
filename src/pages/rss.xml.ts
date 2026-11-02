@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getPosts, postUrl } from '../lib/content';

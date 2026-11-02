@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * CONTENT LINT: SEO + house-style checks the schema cannot express.
  * ERRORS block publishing (exit 1). WARNINGS are printed but do not block.

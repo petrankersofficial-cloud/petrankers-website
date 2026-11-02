@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * Print every page an agent can link to internally (core pages, services, locations, posts,
  * case studies) with title, URL, and keywords. Agents run this before writing internal links.

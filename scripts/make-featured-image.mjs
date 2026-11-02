@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * Generate an on-brand featured image (1600x900 JPG) when a post has no photo.
  *   npm run featured-image -- src/content/blog/my-post            # uses the post's title

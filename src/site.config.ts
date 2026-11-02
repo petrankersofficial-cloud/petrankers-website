@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * SITE CONFIG: the only file you edit per client (plus the design layer).
  * Everything SEO-wide (title suffix, default OG image, organization schema,

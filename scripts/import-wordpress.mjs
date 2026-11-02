@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * WORDPRESS IMPORTER: WordPress export (WXR .xml) -> blog posts in this repo.
  *

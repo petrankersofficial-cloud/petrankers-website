@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * CONTENT SCHEMAS = the "SEO plugin" of this site.
  * Every post must pass these rules or the build FAILS and nothing deploys.

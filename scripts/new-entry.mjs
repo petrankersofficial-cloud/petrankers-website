@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * Scaffold a new content entry with every required field (created as a draft).
  *   npm run new:post -- "How Much Does a Water Heater Cost?"

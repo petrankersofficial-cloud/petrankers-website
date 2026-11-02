@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 /**
  * IndexNow: tell Bing (which feeds ChatGPT search), Yandex, Seznam and others about new or
  * updated URLs right after a deploy. Free. Google does not use IndexNow (use the sitemap in GSC).

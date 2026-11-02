@@ -1,6 +1,8 @@
 {
   "name": "static-blog-starter",
   "version": "1.0.0",
+  "author": "Orrnob Mahmud <orrnobmahmud@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",

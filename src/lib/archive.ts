@@ -1,3 +1,4 @@
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
 import { getPosts, type Post } from './content';

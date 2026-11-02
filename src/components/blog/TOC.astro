@@ -1,4 +1,5 @@
 ---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 import type { MarkdownHeading } from 'astro';
 interface Props { headings: MarkdownHeading[] }
 const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
