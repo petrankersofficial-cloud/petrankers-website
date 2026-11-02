@@ -67,6 +67,10 @@ The design layer is isolated in `src/design/`. Do this in order:
 8. **Clean up:** delete all sample entries in `src/content/` (2 posts, 1 case study, 1 service, 3 locations), set real authors/categories JSON, set `site.forms`, `site.analytics`, `site.indexNowKey`, `site.legal`, and `backend.repo` in `public/admin/config.yml`. Run `npm run check`, open `npm run dev` and visually check: home, `/services/`, a service, `/service-areas/`, a location, `/blog/`, a post, a category page, `/case-studies/`, a case study, `/contact/`, 404, mobile width.
 9. If migrating from WordPress, run the importer (`/migrate-wordpress`) and add old page URLs to `public/_redirects`.
 
+## Next.js version (dormant)
+
+If the user asks for a Next.js version of this system, or to add it to an existing Next.js site (their own portfolio is Next.js), read `.nextjs-port.md` in the repo root. It has the full port plan, constraints, and acceptance tests. Do nothing with it until asked.
+
 ## Decisions already made (do not re-litigate)
 
 - Astro over Eleventy/Hugo: content collections + Zod validation + built-in image optimization are the guardrails that make agent publishing safe.

@@ -14,7 +14,7 @@
 import { readFileSync, existsSync, globSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const DIST = 'dist';
+const DIST = process.env.QA_DIST ?? 'dist'; // Next.js static export uses QA_DIST=out
 if (!existsSync(DIST)) {
   console.error('dist/ not found. Run npm run build first.');
   process.exit(1);
