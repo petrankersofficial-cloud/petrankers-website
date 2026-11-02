@@ -41,7 +41,7 @@ const seoFields = {
 
 const blog = defineCollection({
   // One folder per post: src/content/blog/<slug>/index.md + its images
-  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/blog' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/blog' }),
   schema: ({ image }) =>
     z.object({
       ...seoFields,
@@ -58,7 +58,7 @@ const blog = defineCollection({
 });
 
 const caseStudies = defineCollection({
-  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/case-studies' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/case-studies' }),
   schema: ({ image }) =>
     z.object({
       ...seoFields,
@@ -116,7 +116,7 @@ const categories = defineCollection({
  * One entry per core service. The body is the main sales copy.
  */
 const services = defineCollection({
-  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/services' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/services' }),
   schema: ({ image }) =>
     z.object({
       ...seoFields,
@@ -140,7 +140,7 @@ const services = defineCollection({
  * a service-in-city page ("Vernon Hills Emergency Plumber 60061"). City + ZIP formula applies.
  */
 const locations = defineCollection({
-  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/locations' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/locations' }),
   schema: ({ image }) =>
     z.object({
       ...seoFields,

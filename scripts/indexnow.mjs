@@ -50,7 +50,7 @@ function urlForPageFile(f) {
 let paths = new Set(args.filter((a) => a.startsWith('/')));
 
 if (flag('--all')) {
-  for (const f of globSync('src/content/{blog,case-studies,services,locations}/*/index.{md,mdx}')) {
+  for (const f of globSync('src/content/{blog,case-studies,services,locations}/*/index.md')) {
     const u = urlForContentFile(f);
     if (u) paths.add(u);
   }
@@ -62,7 +62,7 @@ if (flag('--all')) {
   const since = val('--since');
   let changed = [];
   try {
-    changed = execSync(`git diff --name-only --diff-filter=AMR ${since} HEAD`, { encoding: 'utf8' }).split('\n').filter(Boolean);
+    changed = execSync(`git diff --name-only --diff-filter=AMR ${since} HEAD`, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).split('\n').filter(Boolean);
   } catch {
     console.log(`Could not diff against ${since}; nothing sent.`);
     process.exit(0);

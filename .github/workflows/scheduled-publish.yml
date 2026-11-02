@@ -30,7 +30,7 @@ jobs:
             const fs=require("fs");
             const today=new Date().toISOString().slice(0,10);
             let n=0;
-            for (const f of fs.globSync("src/content/{blog,case-studies}/*/index.{md,mdx}")) {
+            for (const f of fs.globSync("src/content/{blog,case-studies,services,locations}/*/index.md")) {
               const fm=(fs.readFileSync(f,"utf8").match(/^---\n([\s\S]*?)\n---/)||[])[1]||"";
               const d=(fm.match(/^publishDate:\s*["\x27]?([0-9-]{10})/m)||[])[1];
               const draft=/^draft:\s*true/m.test(fm);

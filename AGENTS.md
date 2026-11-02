@@ -30,7 +30,7 @@ Generated automatically on every build (never edit by hand): sitemap, RSS, robot
 ## Golden rules
 
 1. **Content only.** When publishing, you create or edit files inside `src/content/` (and `public/_redirects` when a URL changes). You do not touch layouts, components, design files, or config unless the user explicitly asks.
-2. **Folder name = slug.** `src/content/blog/emergency-plumber-vernon-hills/index.md` must have `slug: emergency-plumber-vernon-hills`.
+2. **Folder name = slug, file name = `index.md`.** `src/content/blog/emergency-plumber-vernon-hills/index.md` must have `slug: emergency-plumber-vernon-hills`. Markdown only: `.mdx` files and flat files like `src/content/blog/my-post.md` are rejected by the lint (the build would otherwise skip them silently).
 3. **The template does the SEO plumbing.** Never add an H1, FAQ section, CTA block, author box, table of contents, schema, or meta tags inside the body. They come from frontmatter.
 4. **Never publish what fails `npm run check`.** Fix every ERROR. Fix warnings unless there is a clear reason not to.
 5. **Never invent facts.** No made-up statistics, prices, quotes, reviews, credentials, or client names. If the source content lacks something the template needs (for example a case study result), ask or leave the post as `draft: true`.
@@ -46,7 +46,8 @@ Generated automatically on every build (never edit by hand): sitemap, RSS, robot
 | `npm run featured-image -- <entry-folder> [--label "Cost Guide"]` | Generates an on-brand `featured.jpg` from the title when no photo exists |
 | `npm run posts:index` | Lists every linkable URL on the site (use for internal links) |
 | `npm run lint:content` | SEO + style checks on all content (add a path to check one entry) |
-| `npm run check` | Lint + full production build (+ search index). Must pass before you commit |
+| `npm run check` | Lint + full production build (+ search index) + site QA crawl. Must pass before you commit |
+| `npm run qa` | Crawls the built site: broken internal links, missing images, H1 count, meta, canonical, JSON-LD, sitemap (runs inside `check`) |
 | `npm run import:wordpress -- export.xml [--images]` | Imports a WordPress export (see Migration) |
 | `npm run indexnow -- --since HEAD~1` | Pings IndexNow for changed URLs (CI does this automatically after deploy) |
 | `npm run dev` | Local preview at http://localhost:4321 |

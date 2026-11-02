@@ -5,7 +5,7 @@
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "check": "npm run lint:content && npm run build",
+    "check": "npm run lint:content && npm run build && npm run qa",
     "lint:content": "node scripts/lint-content.mjs",
     "new:post": "node scripts/new-entry.mjs blog",
     "new:case-study": "node scripts/new-entry.mjs case-studies",
@@ -14,7 +14,8 @@
     "import:wordpress": "node scripts/import-wordpress.mjs",
     "featured-image": "node scripts/make-featured-image.mjs",
     "new:service": "node scripts/new-entry.mjs services",
-    "new:location": "node scripts/new-entry.mjs locations"
+    "new:location": "node scripts/new-entry.mjs locations",
+    "qa": "node scripts/qa-site.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

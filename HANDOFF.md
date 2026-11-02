@@ -37,6 +37,13 @@ Phase 2 additions (also built and verified):
 - **Editor UI (optional):** Sveltia CMS at `/admin/` (`public/admin/config.yml`), GitHub token sign-in, edits the same files for all four collections. Set `backend.repo` per site.
 - **Skills:** `/publish-blog`, `/publish-case-study`, `/publish-service-page`, `/publish-location-pages`, `/migrate-wordpress`.
 
+QA round (verified):
+
+- **`npm run qa`** crawls `dist/` after every build (part of `npm run check`, so hosts refuse to deploy a broken site): broken internal links, missing local images, images without alt, exactly one H1, title/description/canonical/lang present, JSON-LD parses, sitemap URLs exist and contain no noindex pages, required files present. Warns on duplicate titles/descriptions and missing trailing slashes.
+- **Bugs found and fixed:** author box linked to a non-existent `/about/` (placeholder About page added); `.mdx` and flat `.md` files were silently dropped by the build (now Markdown-only, lint errors on stray files); scheduled-publish ignored services and locations (fixed); JSON-LD did not escape `<`, so `</script>` in a FAQ could break the page (now escaped, tested with a malicious answer); paginated archives shared one meta description (page number added); duplicate-copy lint printed one line per page pair (now one line per page, 3x faster).
+- **Stress test:** 282 live posts + 12 drafts + 6 scheduled, 30 case studies (1 and 6 stat cards), 15 services, 120 locations with nearby links and a draft location. Lint 0.6 s, build 12 s for 512 pages, QA 0.5 s, 0 errors, 0 warnings. Drafts and scheduled entries absent from pages, sitemap, RSS, and llms.txt. Unicode, quotes, colons, ampersands escaped correctly. No horizontal overflow and no JS errors on 22 page types at 390 px and 1280 px.
+- Builds with real photos take longer than the stress test (each image is resized into several WebP sizes), but stay well within free-tier build time for sites of this size.
+
 ## Status: what is WAITING on the user
 
 1. **The real design.** Everything visual is a neutral placeholder. The user will send an existing Claude Design site (HTML/CSS, or a GitHub repo) plus a blog/case-study design if they have one.

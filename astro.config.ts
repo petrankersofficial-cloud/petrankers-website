@@ -15,7 +15,7 @@ for (const [dir, base] of [
   ['src/content/services', '/services/'],
   ['src/content/locations', '/service-areas/'],
 ] as const) {
-  for (const f of globSync(`${dir}/*/index.{md,mdx}`)) {
+  for (const f of globSync(`${dir}/*/index.md`)) {
     const { data } = matter(readFileSync(f, 'utf8'));
     if (!data.slug) continue;
     const d = data.updatedDate ?? data.publishDate;

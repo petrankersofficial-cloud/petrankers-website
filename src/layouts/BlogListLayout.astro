@@ -34,7 +34,7 @@ const catNames = new Map(
 
 <BaseLayout
   metaTitle={p.metaTitle + titleSuffix}
-  metaDescription={p.metaDescription}
+  metaDescription={p.current > 1 ? `Page ${p.current} of ${p.last}. ${p.metaDescription}` : p.metaDescription}
   prev={prev}
   next={next}
   schema={[

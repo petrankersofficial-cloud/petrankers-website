@@ -24,7 +24,7 @@ Requires Node.js 22.23.4 or newer.
 ```
 npm install
 npm run dev        # http://localhost:4321
-npm run check      # what the host runs before deploying
+npm run check      # what the host runs before deploying: content lint + build + site QA crawl
 ```
 
 ## Deploy (one time per site)
@@ -91,5 +91,7 @@ Manual: `npm run new:post -- "Title"`, fill the file, add `featured.jpg`, `npm r
 | `src/layouts/CaseStudyLayout.astro` | Single case study template |
 | `src/design/` | Design layer (swap per client) |
 | `src/site.config.ts` | Per-site settings |
-| `scripts/lint-content.mjs` | SEO + style checks |
+| `scripts/lint-content.mjs` | SEO + style checks on content files |
+| `scripts/qa-site.mjs` | Crawls the built site for broken links, missing meta, schema errors |
+| `docs/CLAUDE-DESIGN-SPEC.md` | Prompt + rules for designing new sites that port in minutes |
 | `public/_redirects` | 301 redirects |

@@ -24,7 +24,7 @@ for (const [dir, base, type] of [
   ['src/content/blog', '/blog/', 'post'],
   ['src/content/case-studies', '/case-studies/', 'case-study'],
 ]) {
-  for (const f of globSync(`${dir}/*/index.{md,mdx}`)) {
+  for (const f of globSync(`${dir}/*/index.md`)) {
     const { data } = matter(readFileSync(f, 'utf8'));
     if (data.draft || data.noindex) continue;
     rows.push({

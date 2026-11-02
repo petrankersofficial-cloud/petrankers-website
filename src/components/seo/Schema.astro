@@ -10,6 +10,8 @@ interface Props {
 }
 const { items = [] } = Astro.props;
 const graph = { '@context': 'https://schema.org', '@graph': [organizationSchema(), websiteSchema(), ...items] };
+// Escape < > & so content like "</script>" in a FAQ answer can never break out of the tag.
+const json = JSON.stringify(graph).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(graph)} />
+<script type="application/ld+json" set:html={json} />

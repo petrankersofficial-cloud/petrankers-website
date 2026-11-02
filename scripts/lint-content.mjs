@@ -30,7 +30,7 @@ const categories = new Set(JSON.parse(readFileSync('src/content/categories.json'
 const authors = new Set(JSON.parse(readFileSync('src/content/authors.json', 'utf8')).map((a) => a.id));
 
 const TYPES = ['blog', 'case-studies', 'services', 'locations'];
-const all = TYPES.flatMap((t) => globSync(`src/content/${t}/*/index.{md,mdx}`).map((f) => ({ f, type: t })));
+const all = TYPES.flatMap((t) => globSync(`src/content/${t}/*/index.md`).map((f) => ({ f, type: t })));
 const slugsOf = (t) => new Set(all.filter((e) => e.type === t).map((e) => matter(readFileSync(e.f, 'utf8')).data.slug));
 const serviceSlugs = slugsOf('services');
 const locationSlugs = slugsOf('locations');
@@ -50,6 +50,35 @@ for (const e of all) {
 
 let errors = 0;
 let warnings = 0;
+
+// 5-word shingles for every location page, computed once (used by the duplicate-copy check)
+let _shingles;
+function locationShingles() {
+  if (_shingles) return _shingles;
+  _shingles = new Map();
+  for (const e of all.filter((x) => x.type === 'locations')) {
+    const w = matter(readFileSync(e.f, 'utf8')).content.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    const s = new Set();
+    for (let i = 0; i + 5 <= w.length; i++) s.add(w.slice(i, i + 5).join(' '));
+    _shingles.set(e.f, s);
+  }
+  return _shingles;
+}
+
+// Stray content files are silently ignored by the build, so they must fail here.
+const valid = new Set(all.map((e) => e.f));
+const stray = TYPES.flatMap((t) => globSync(`src/content/${t}/**/*.{md,mdx,markdown}`)).filter((f) => !valid.has(f));
+if (stray.length) {
+  console.log('\nStray content files (the build would silently skip these):');
+  for (const f of stray) {
+    const fix = f.endsWith('.mdx') || f.endsWith('.markdown')
+      ? 'use .md (MDX is not enabled)'
+      : 'each entry must be <folder>/index.md, e.g. src/content/blog/my-post/index.md';
+    console.log(`  ERROR  ${f}: ${fix}`);
+  }
+  errors += stray.length;
+}
+
 for (const { f, type } of targets) {
   const src = readFileSync(f, 'utf8');
   const { data, content } = matter(src);
@@ -104,21 +133,23 @@ for (const { f, type } of targets) {
     if (city && !String(data.title ?? '').toLowerCase().includes(city)) W.push(`city "${data.city}" not in title (H1)`);
   }
 
-  // Thin / duplicate location copy: compare against other location pages
+  // Thin / duplicate location copy: compare against other location pages (one line per page)
   if (type === 'locations' && content.length > 200) {
-    const shingles = (t) => {
-      const w = t.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
-      const s = new Set();
-      for (let i = 0; i + 5 <= w.length; i++) s.add(w.slice(i, i + 5).join(' '));
-      return s;
-    };
-    const mine = shingles(content);
-    for (const other of all.filter((e) => e.type === 'locations' && e.f !== f)) {
-      const theirs = shingles(matter(readFileSync(other.f, 'utf8')).content);
-      const shared = [...mine].filter((x) => theirs.has(x)).length;
-      const ratio = mine.size ? shared / mine.size : 0;
-      if (ratio > 0.6) W.push(`${Math.round(ratio * 100)}% of body text duplicates ${other.f}. Write unique local copy (doorway page risk)`);
+    const mine = locationShingles().get(f);
+    let worst = null;
+    let count = 0;
+    for (const [other, theirs] of locationShingles()) {
+      if (other === f || !mine?.size) continue;
+      let shared = 0;
+      for (const x of mine) if (theirs.has(x)) shared++;
+      const ratio = shared / mine.size;
+      if (ratio > 0.6) {
+        count++;
+        if (!worst || ratio > worst.ratio) worst = { other, ratio };
+      }
     }
+    if (worst)
+      W.push(`${Math.round(worst.ratio * 100)}% of body text duplicates ${worst.other}${count > 1 ? ` (and ${count - 1} other location page(s))` : ''}. Write unique local copy (doorway page risk)`);
   }
 
   // Images exist + alt text
