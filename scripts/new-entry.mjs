@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /**
- * Scaffold a new post or case study folder with every required field.
- *   npm run new:post -- "Emergency Plumber in Vernon Hills 60061"
+ * Scaffold a new content entry with every required field (created as a draft).
+ *   npm run new:post -- "How Much Does a Water Heater Cost?"
  *   npm run new:case-study -- "345% More Calls for a Vernon Hills Plumber"
+ *   npm run new:service -- "Drain Cleaning"
+ *   npm run new:location -- "Vernon Hills Emergency Plumber 60061" --city "Vernon Hills" --state IL --zip 60061 --service emergency-plumbing
  * Optional: --slug custom-slug --category guides --date 2026-12-01
  */
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const [type, ...rest] = process.argv.slice(2);
-if (!['blog', 'case-studies'].includes(type)) {
-  console.error('Usage: node scripts/new-entry.mjs <blog|case-studies> "Title" [--slug x] [--category y] [--date YYYY-MM-DD]');
+if (!['blog', 'case-studies', 'services', 'locations'].includes(type)) {
+  console.error('Usage: node scripts/new-entry.mjs <blog|case-studies|services|locations> "Title" [--slug x] [--category y] [--date YYYY-MM-DD]');
   process.exit(1);
 }
 const flags = {};
@@ -73,7 +75,7 @@ TODO intro paragraph. Include the focus keyword and link to at least two interna
 const cs = `---
 title: ${q(title)}
 metaTitle: ${q(title.slice(0, 60))}
-metaDescription: "TODO: 120 to 160 characters. Lead with the headline result."
+metaDescription: "TODO: 120 to 160 characters. Lead with the headline result, then the service and the timeline."
 slug: ${slug}
 publishDate: ${date}
 client: "TODO: client name or anonymized description"
@@ -87,7 +89,7 @@ results:
     after: "TODO"
     change: ""
 featuredImage: ./featured.jpg
-featuredImageAlt: "TODO"
+featuredImageAlt: "TODO: describe the image in plain words"
 excerpt: "TODO: one sentence with the headline result."
 faq: []
 draft: true
@@ -100,7 +102,63 @@ draft: true
 ## The result
 `;
 
+const service = `---
+title: ${q(title)}
+metaTitle: ${q(title.slice(0, 60))}
+metaDescription: "TODO: 120 to 160 characters. Service + benefit + area + reason to call."
+slug: ${slug}
+publishDate: ${date}
+serviceName: ${q(title)}
+serviceType: ""
+focusKeyword: ""
+excerpt: "TODO: one or two sentences for the hero and service cards."
+featuredImage: ./featured.jpg
+featuredImageAlt: "TODO: describe the image in plain words"
+order: 100
+benefits: []
+process: []
+faq: []
+draft: true
+---
+
+TODO intro: what the service is, who it is for, and the main benefit. Link to 2 or more related pages.
+
+## What is included
+
+## Signs you need this service
+`;
+
+const zip = flags.zip ?? 'TODO';
+const city = flags.city ?? 'TODO';
+const state = flags.state ?? 'TODO';
+const location = `---
+title: ${q(title)}
+metaTitle: ${q(title.slice(0, 60))}
+metaDescription: "TODO: 120 to 160 characters. Service + city + ZIP ${zip} + the main benefit + a reason to call today."
+slug: ${slug}
+publishDate: ${date}
+city: ${q(city)}
+state: ${q(state)}
+zips: [${q(zip)}]
+county: ""
+${flags.service ? `service: ${flags.service}` : '# service: service-slug   (set for a service-in-city page, leave out for a city hub)'}
+excerpt: "TODO: one or two sentences for the hero section of this page."
+neighborhoods: []
+nearby: []
+faq: []
+draft: true
+---
+
+TODO intro with the city and ZIP ${zip}, written for this city only (no copy-paste between location pages).
+
+## TODO: service in ${city} ${zip}
+
+## Why ${city} customers choose us
+`;
+
 mkdirSync(dir, { recursive: true });
-writeFileSync(join(dir, 'index.md'), type === 'blog' ? blog : cs);
+writeFileSync(join(dir, 'index.md'), { blog, 'case-studies': cs, services: service, locations: location }[type]);
 console.log(`Created ${join(dir, 'index.md')}`);
-console.log(`Next: add ${join(dir, 'featured.jpg')} (1600x900 recommended), fill every TODO, set draft: false, run npm run check.`);
+console.log(type === 'locations'
+  ? 'Next: fill every TODO with unique local copy, set draft: false, run npm run check.'
+  : `Next: add ${join(dir, 'featured.jpg')} (1600x900 recommended, or npm run featured-image -- ${dir}), fill every TODO, set draft: false, run npm run check.`);

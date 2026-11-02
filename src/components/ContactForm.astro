@@ -1,0 +1,72 @@
+---
+/**
+ * Contact form that works on a static site for free.
+ * Backend chosen in site.config.ts -> forms.provider (netlify | web3forms | formspree).
+ * Usage: <ContactForm /> or <ContactForm name="quote" heading="Get a Free Quote" />
+ */
+import { site } from '../site.config';
+
+interface Props {
+  name?: string; // form name (Netlify shows submissions per form name)
+  heading?: string;
+  submitLabel?: string;
+  showService?: boolean;
+}
+const { name = 'contact', heading, submitLabel = 'Send Message', showService = true } = Astro.props;
+const f = site.forms;
+const success = new URL(f.successPath, site.url).toString();
+
+const action =
+  f.provider === 'web3forms'
+    ? 'https://api.web3forms.com/submit'
+    : f.provider === 'formspree'
+      ? `https://formspree.io/f/${f.formspreeId}`
+      : f.successPath;
+const misconfigured =
+  (f.provider === 'web3forms' && !f.web3formsKey) || (f.provider === 'formspree' && !f.formspreeId);
+---
+
+<form
+  class="contact-form"
+  name={name}
+  method="POST"
+  action={action}
+  data-netlify={f.provider === 'netlify' ? 'true' : undefined}
+  netlify-honeypot={f.provider === 'netlify' ? 'company_website' : undefined}
+>
+  {heading && <h2>{heading}</h2>}
+  {misconfigured && <p class="form-warning">Form not configured: add the {f.provider} key in site.config.ts.</p>}
+
+  {f.provider === 'netlify' && <input type="hidden" name="form-name" value={name} />}
+  {f.provider === 'web3forms' && (
+    <>
+      <input type="hidden" name="access_key" value={f.web3formsKey} />
+      <input type="hidden" name="subject" value={`New ${name} form submission: ${site.name}`} />
+      <input type="hidden" name="redirect" value={success} />
+      <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+    </>
+  )}
+  {f.provider === 'formspree' && <input type="hidden" name="_next" value={success} />}
+
+  <!-- Honeypot: humans never see or fill this -->
+  <p class="visually-hidden" aria-hidden="true">
+    <label>Leave empty <input name="company_website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="form-row">
+    <label>Full name<input type="text" name="name" autocomplete="name" required /></label>
+    <label>Phone<input type="tel" name="phone" autocomplete="tel" required /></label>
+  </div>
+  <label>Email<input type="email" name="email" autocomplete="email" required /></label>
+  {showService && (
+    <label>What do you need?
+      <select name="service">
+        {f.services.map((s) => <option>{s}</option>)}
+      </select>
+    </label>
+  )}
+  <label>Message<textarea name="message" rows="5"></textarea></label>
+  <input type="hidden" name="page" value={Astro.url.pathname} />
+
+  <button class="btn" type="submit">{submitLabel}</button>
+</form>

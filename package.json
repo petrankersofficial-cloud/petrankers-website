@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "check": "npm run lint:content && astro build",
+    "check": "npm run lint:content && npm run build",
     "lint:content": "node scripts/lint-content.mjs",
     "new:post": "node scripts/new-entry.mjs blog",
     "new:case-study": "node scripts/new-entry.mjs case-studies",
-    "posts:index": "node scripts/posts-index.mjs"
+    "posts:index": "node scripts/posts-index.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "import:wordpress": "node scripts/import-wordpress.mjs",
+    "featured-image": "node scripts/make-featured-image.mjs",
+    "new:service": "node scripts/new-entry.mjs services",
+    "new:location": "node scripts/new-entry.mjs locations"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
@@ -22,5 +27,11 @@
   "type": "module",
   "engines": {
     "node": ">=22.23.4"
+  },
+  "devDependencies": {
+    "fast-xml-parser": "^5.11.2",
+    "pagefind": "^1.6.0",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
   }
 }

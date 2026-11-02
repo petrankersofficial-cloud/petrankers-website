@@ -7,16 +7,19 @@ This file is the operating manual for any AI agent (Claude Code, Claude Desktop,
 A static Astro site. Core pages are `.astro` files in `src/pages/`. Blog posts and case studies are Markdown files that render through fixed templates, like a WordPress single-post template. Pushing to `main` on GitHub auto-deploys to Netlify or Cloudflare Pages.
 
 ```
-src/content/blog/<slug>/index.md            <- one blog post + its images in the same folder
-src/content/case-studies/<slug>/index.md    <- one case study + its images
+src/content/blog/<slug>/index.md            <- blog post + its images        -> /blog/<slug>/
+src/content/case-studies/<slug>/index.md    <- case study + its images       -> /case-studies/<slug>/
+src/content/services/<slug>/index.md        <- core service page             -> /services/<slug>/
+src/content/locations/<slug>/index.md       <- city hub or service-in-city   -> /service-areas/<slug>/
 src/content/authors.json                    <- valid author ids
 src/content/categories.json                 <- valid category ids
-src/layouts/BlogPostLayout.astro            <- single post template (do not edit unless asked)
-src/layouts/CaseStudyLayout.astro           <- single case study template (do not edit unless asked)
+src/layouts/*Layout.astro                   <- templates (do not edit unless asked)
 src/design/                                 <- header, footer, CSS (the design layer)
-src/site.config.ts                          <- site name, URL, NAP, nav, CTA, lint rules
+src/site.config.ts                          <- name, URL, NAP, nav, CTA, analytics, forms, IndexNow, lint rules
 public/_redirects                           <- 301 redirects
 ```
+
+Generated automatically on every build (never edit by hand): sitemap, RSS, robots.txt, llms.txt, schema, search index, OG images.
 
 ## Golden rules
 
@@ -32,9 +35,14 @@ public/_redirects                           <- 301 redirects
 |---|---|
 | `npm run new:post -- "Post Title"` | Scaffolds `src/content/blog/<slug>/index.md` with every field (as a draft) |
 | `npm run new:case-study -- "Title"` | Same for a case study |
+| `npm run new:service -- "Service Name"` | Same for a service page |
+| `npm run new:location -- "Title" --city X --state IL --zip 60061 [--service slug]` | Same for a location page |
+| `npm run featured-image -- <entry-folder> [--label "Cost Guide"]` | Generates an on-brand `featured.jpg` from the title when no photo exists |
 | `npm run posts:index` | Lists every linkable URL on the site (use for internal links) |
 | `npm run lint:content` | SEO + style checks on all content (add a path to check one entry) |
-| `npm run check` | Lint + full production build. Must pass before you commit |
+| `npm run check` | Lint + full production build (+ search index). Must pass before you commit |
+| `npm run import:wordpress -- export.xml [--images]` | Imports a WordPress export (see Migration) |
+| `npm run indexnow -- --since HEAD~1` | Pings IndexNow for changed URLs (CI does this automatically after deploy) |
 | `npm run dev` | Local preview at http://localhost:4321 |
 
 ## Workflow: publish a blog post
@@ -64,6 +72,37 @@ Same as a blog post, using `npm run new:case-study`. Extra rules:
 - Body is short: The challenge, What we did, The result. Bold the key figures in the body.
 - Testimonial only if a real quote is supplied.
 
+## Workflow: service pages
+
+1. `npm run new:service -- "<Service Name>"`. One page per core service.
+2. Fill `serviceName`, `serviceType`, `excerpt` (hero line), `benefits` (4 to 8 short lines), `process` (3 to 5 steps), `faq`.
+3. `priceRange` only when the client supplied real prices. Never estimate.
+4. Body: what the service is, who it is for, signs you need it, what is included. Link to related services, relevant location pages, and 1 to 2 blog posts.
+5. Image: client photo of the work if available, otherwise `npm run featured-image`.
+6. `npm run check`, commit `service: <slug>`, push.
+
+## Workflow: location pages (City + ZIP + service)
+
+Two kinds, same collection:
+- **City hub:** `npm run new:location -- "Plumber in Vernon Hills, IL 60061" --city "Vernon Hills" --state IL --zip 60061`. Lists every service for that city.
+- **Service-in-city:** add `--service <service-slug>`, e.g. `"Vernon Hills Emergency Plumber 60061" --service emergency-plumbing`.
+
+Rules:
+- Primary ZIP in `metaTitle`, `title`, and body copy. City in `title`. Use both forms in the copy: "Vernon Hills emergency plumber" and "60061 emergency plumber".
+- **Every location page needs unique copy.** No find-and-replace of the city name across pages. The lint flags pages that share more than 60% of their text (doorway page risk). Use real local details: neighborhoods served, local housing stock, jobs done in that area, response times, local reviews.
+- `landmarks`, `neighborhoods`, and local claims only if true. Ask the user if unsure.
+- Interlink: set `nearby` to 2 to 4 nearby location slugs, link to the matching service page, and link to the city hub.
+- Batch creation (for example 20 cities) is fine, but every page must pass `npm run check` and carry unique copy. If you cannot write unique copy for a city, leave it as `draft: true` and say so.
+
+## Workflow: WordPress migration
+
+1. User exports from WordPress: Tools > Export > Posts.
+2. `npm run import:wordpress -- export.xml --images` (drop `--images` if downloads fail; remote image URLs are kept).
+3. The importer writes posts, pulls Yoast/Rank Math meta, adds categories, generates featured images where missing, and appends 301s to `public/_redirects`.
+4. Read its report. Fix: auto alt text, generated featured images (replace with real photos when available), weak meta descriptions.
+5. `npm run check`, fix errors, then commit `import: wordpress posts` in one push.
+6. Pages (About, Services) are not imported automatically: rebuild them as `.astro` pages or service entries, and add their old URLs to `public/_redirects`.
+
 ## Frontmatter spec: blog
 
 | Field | Required | Rule |
@@ -91,6 +130,10 @@ Same as a blog post, using `npm run new:case-study`. Extra rules:
 
 Case studies add: `client`, `industry`, `location`, `services` (list), `duration`, `results` (list), `testimonial` (`quote`, `name`, `role`). `author`, `category`, `tags` are not used (author optional).
 
+Services use the shared SEO fields plus: `serviceName`, `serviceType`, `excerpt`, `featuredImage`, `featuredImageAlt`, `benefits` (list), `process` (list of `title`/`text`), `priceRange`, `order`, `faq`, `cta`.
+
+Locations use the shared SEO fields plus: `city`, `state` (2 letters), `zips` (list, primary first), `county`, `service` (service slug, optional), `excerpt`, `featuredImage` (optional, falls back to the service image), `neighborhoods`, `nearby` (location slugs), `landmarks`, `geo` (`lat`/`lng`), `showMap`, `faq`, `cta`.
+
 ## Writing style rules (apply to every post)
 
 - **No em dashes (the long dash).** Use a comma, colon, period, or parentheses. The lint blocks them.
@@ -109,8 +152,8 @@ Case studies add: `client`, `industry`, `location`, `services` (list), `duration
 - Body images: descriptive kebab-case names (`burst-pipe-under-sink.jpg`), at least 1200px wide.
 - Keep source files smaller than 1 MB. The build converts and resizes them (WebP + responsive sizes).
 - Every image needs real alt text describing what is in it. Do not stuff keywords.
-- Sources, in order: images supplied with the content, then the client's own photos, then stock (Unsplash) if the user allows it. Never use images of real identifiable people unless the client supplied them. Never hotlink.
-- If no image is available, ask. Do not publish with a placeholder.
+- Sources, in order: images supplied with the content, then the client's own photos, then stock (Unsplash) if the user allows it, then `npm run featured-image -- <folder>` (on-brand title card generated from the design colors). Never use images of real identifiable people unless the client supplied them. Never hotlink.
+- Body images are never generated. If the content references a photo you do not have, ask or leave it out.
 
 ## Updating, renaming, deleting
 
@@ -118,6 +161,16 @@ Case studies add: `client`, `industry`, `location`, `services` (list), `duration
 - **Change a slug:** rename the folder + `slug`, then add `/blog/old-slug/  /blog/new-slug/  301` to `public/_redirects`. Update internal links pointing to the old URL.
 - **Delete a post:** remove the folder and add a 301 in `public/_redirects` to the most relevant remaining page. Search the content for links to it and fix them.
 - **Unpublish without deleting:** `draft: true`.
+
+## Site settings agents may change (only when asked)
+
+All in `src/site.config.ts`:
+- `analytics`: GTM, GA4, Cloudflare Web Analytics, Clarity, Search Console and Bing verification. Empty = off.
+- `forms.provider`: `netlify` on Netlify, `web3forms` or `formspree` on Cloudflare Pages (add the key). Forms post to `/thank-you/` (track conversions there).
+- `indexNowKey`: generate with `node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"`.
+- `legal`: effective date and jurisdiction for `/privacy-policy/` and `/terms/`.
+
+Contact forms: place `<ContactForm />` (from `src/components/ContactForm.astro`) on any `.astro` page. Optional props: `name`, `heading`, `submitLabel`, `showService`.
 
 ## Git rules
 

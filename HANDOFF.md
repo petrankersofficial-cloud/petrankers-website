@@ -21,9 +21,26 @@ Built and verified (production build passes, output checked):
 - **Agent layer:** `AGENTS.md` (full publishing manual for any agent), `CLAUDE.md` (imports AGENTS.md), skills `/publish-blog` and `/publish-case-study` in `.claude/skills/`, copy-paste prompts in `docs/agent-prompts.md`.
 - **Deploy:** `netlify.toml`, `public/_headers`, `public/_redirects` (both hosts read these), CI check workflow, optional GitHub-build-then-upload workflow for Cloudflare (escape hatch for free build limits).
 
+Phase 2 additions (also built and verified):
+
+- **Service pages** (`services` collection, `/services/<slug>/`, `ServiceLayout`): hero with CTA + call button, benefits, process steps, optional price range, service areas for that service, FAQ, other services. Service + WebPage + Breadcrumb + FAQ schema.
+- **Location pages** (`locations` collection, `/service-areas/<slug>/`, `LocationLayout`): city hub or service-in-city (`service` set). ZIP list, neighborhoods, free Google Maps embed (no API key), same-city services, nearby areas, FAQ. Service schema with `areaServed` City + PostalAddress. Index at `/service-areas/` grouped by city.
+- **Lint for locations:** primary ZIP in metaTitle and body, city in H1, valid `service`/`nearby` slugs, and a duplicate-copy check (more than 60% shared 5-word phrases with another location page = doorway risk warning).
+- **Contact form** (`src/components/ContactForm.astro`): Netlify Forms, Web3Forms, or Formspree via `site.forms.provider`, honeypot spam field, redirects to `/thank-you/` (noindex, conversion tracking point). `/contact/` page with NAP + ContactPage schema.
+- **Analytics** (`src/components/Analytics.astro`): GTM (with noscript), GA4, Cloudflare Web Analytics, Clarity, Google + Bing verification. All off until IDs are set in `site.analytics`.
+- **Legal:** `/privacy-policy/` and `/terms/` generated from site config (mentions only the tools actually enabled). Footer links. Client must review.
+- **AEO:** `/llms.txt` generated from all services, locations, case studies, and posts. WebSite schema with SearchAction. IndexNow: key file at `/indexnow-key.txt`, `scripts/indexnow.mjs`, and `.github/workflows/indexnow.yml` that waits for the deploy to go live, then pings changed URLs.
+- **Search:** Pagefind (free, static) runs after `astro build`; `/search/` page with `?q=` support; only content areas are indexed (`data-pagefind-body`).
+- **WordPress importer** (`npm run import:wordpress`): WXR to Markdown (tables kept), Yoast + Rank Math title/description/focus keyword with variables resolved, brand suffix stripped, media-library alt text, featured image download (converted to JPG) or generated fallback, internal links rewritten to new paths, Gutenberg comments and shortcodes stripped, body H1 demoted, em dashes replaced (colon in titles, comma in body), categories added, 301s appended to `_redirects`, review report. Tested on a sample export.
+- **Featured image generator** (`npm run featured-image`): on-brand 1600x900 title card from `tokens.css` colors + site name (sharp, offline).
+- **Scaffolders:** `new:service`, `new:location` (with `--city --state --zip --service`). All scaffolds validate as drafts.
+- **Editor UI (optional):** Sveltia CMS at `/admin/` (`public/admin/config.yml`), GitHub token sign-in, edits the same files for all four collections. Set `backend.repo` per site.
+- **Skills:** `/publish-blog`, `/publish-case-study`, `/publish-service-page`, `/publish-location-pages`, `/migrate-wordpress`.
+
 ## Status: what is WAITING on the user
 
-**The real design.** Everything visual is a neutral placeholder. The user will send an existing Claude Design site (HTML/CSS, or a GitHub repo) plus a blog/case-study design if they have one.
+1. **The real design.** Everything visual is a neutral placeholder. The user will send an existing Claude Design site (HTML/CSS, or a GitHub repo) plus a blog/case-study design if they have one.
+2. **First live deploy test** (needs their Cloudflare/Netlify account): connect the repo, confirm the build passes on the host, submit a test form, check `/llms.txt`, `/sitemap-index.xml`, `/search/`, and `/admin/`.
 
 ## When the design arrives: integration steps
 
@@ -35,8 +52,9 @@ The design layer is isolated in `src/design/`. Do this in order:
 4. **Core pages:** for each design page (home, about, services, contact...), create `src/pages/<name>.astro` (or `src/pages/<name>/index.astro`). Paste the page's `<main>` content inside `<BaseLayout metaTitle="..." metaDescription="...">`. Move its `<head>` meta into BaseLayout props. Move images to `public/` or `src/assets/`. Plain HTML works as-is in `.astro` files (watch for `class` on SVG and inline `<script>`: add `is:inline` to scripts that must not be bundled).
 5. **Blog + case study templates:** if the user has a blog design, restyle `BlogPostLayout.astro`, `CaseStudyLayout.astro`, `BlogListLayout.astro`, and `src/components/blog/*` to match it. **Do not change prop names or the frontmatter schema**: agents depend on them. If no blog design is given, derive one from the site's visual language (cards, buttons, type scale).
 6. **Site config:** fill `src/site.config.ts` (name, URL, title template, NAP, business type, areaServed, sameAs, nav, CTA). Replace `public/logo.svg`, `public/favicon.svg`, `public/og-default.jpg` (1200x630).
-7. **Clean up:** delete the three sample entries in `src/content/`, set real authors/categories JSON, run `npm run check`, open `npm run dev` and visually check: home, `/blog/`, one post, a category page, `/case-studies/`, one case study, 404, mobile width.
-8. If migrating from WordPress, add old URL 301s to `public/_redirects`.
+7. **Restyle the other templates** to the design: `ServiceLayout.astro`, `LocationLayout.astro`, `ContactForm.astro` (and the `.contact-form`, `.service-hero`, `.check-list`, `.steps`, `.link-grid` classes in `global.css`), `/services/`, `/service-areas/`, `/contact/`, `/search/` (Pagefind UI picks up CSS variables `--pagefind-ui-*`). If the design already has a contact or services page, keep its look and drop `<ContactForm />` into it.
+8. **Clean up:** delete all sample entries in `src/content/` (2 posts, 1 case study, 1 service, 3 locations), set real authors/categories JSON, set `site.forms`, `site.analytics`, `site.indexNowKey`, `site.legal`, and `backend.repo` in `public/admin/config.yml`. Run `npm run check`, open `npm run dev` and visually check: home, `/services/`, a service, `/service-areas/`, a location, `/blog/`, a post, a category page, `/case-studies/`, a case study, `/contact/`, 404, mobile width.
+9. If migrating from WordPress, run the importer (`/migrate-wordpress`) and add old page URLs to `public/_redirects`.
 
 ## Decisions already made (do not re-litigate)
 
@@ -44,7 +62,10 @@ The design layer is isolated in `src/design/`. Do this in order:
 - Markdown (`.md`) not MDX for posts: simplest format for agents; MDX glob is already allowed if components are ever needed in posts.
 - One folder per post (`<slug>/index.md` + images) so media travels with the post.
 - URLs: trailing slash, `/blog/<slug>/`, `/case-studies/<slug>/`, `/blog/category/<id>/`, pagination `/page/N/`.
-- No CMS installed. Optional later: Pages CMS or Sveltia CMS (both free, Git-based, edit the same files).
+- Sveltia CMS is included but optional; agents remain the main publishing path.
+- Location URLs live under `/service-areas/<slug>/` (flat, slug carries city + service), not nested under `/services/`.
+- No Cloudflare Turnstile on forms: without a server to verify tokens it gives no real protection. Honeypot + provider spam filters instead.
+- No tag archive pages (thin content). Tags only feed related posts.
 
 ## User preferences that affect this project
 

@@ -25,6 +25,27 @@ Client: <name or anonymize>. Results: <paste numbers>. Push to main.
 Notes: <paste>
 ```
 
+## Create a service page
+```
+Create a service page for <service> following AGENTS.md. Here is the copy / notes: <paste>.
+Prices: <real prices or "none">. Push to main.
+```
+
+## Create location pages in bulk
+```
+Create location pages following AGENTS.md (location workflow) for <service-slug> in:
+- Vernon Hills, IL 60061
+- Libertyville, IL 60048
+- Mundelein, IL 60060
+Local details per city: <paste what you know>. Unique copy per page. One push.
+```
+
+## Migrate a WordPress blog
+```
+Migrate this WordPress export into the site following AGENTS.md (WordPress migration).
+File: <path to export.xml>. Download images. Show me the dry-run report first.
+```
+
 ## Update an existing post
 ```
 Update /blog/<slug>/ following AGENTS.md: <what to change>.

@@ -8,6 +8,7 @@ import Header from '../design/Header.astro';
 import Footer from '../design/Footer.astro';
 import SEO from '../components/seo/SEO.astro';
 import Schema from '../components/seo/Schema.astro';
+import Analytics from '../components/Analytics.astro';
 import { site } from '../site.config';
 
 type SEOProps = import('../components/seo/SEO.astro').Props;
@@ -27,9 +28,11 @@ const items = schema.filter(Boolean) as Record<string, unknown>[];
     <meta name="generator" content={Astro.generator} />
     <SEO {...seo} />
     <Schema items={items} />
+    <Analytics position="head" />
     <slot name="head" />
   </head>
   <body>
+    <Analytics position="body" />
     <a class="visually-hidden" href="#main">Skip to content</a>
     <Header />
     <main id="main">

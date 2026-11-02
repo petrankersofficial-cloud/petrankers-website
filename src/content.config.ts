@@ -111,4 +111,55 @@ const categories = defineCollection({
   }),
 });
 
-export const collections = { blog, caseStudies, authors, categories };
+/**
+ * SERVICE PAGES: /services/<slug>/
+ * One entry per core service. The body is the main sales copy.
+ */
+const services = defineCollection({
+  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/services' }),
+  schema: ({ image }) =>
+    z.object({
+      ...seoFields,
+      serviceName: z.string(), // name used in Service schema + cards: "Emergency Plumbing"
+      serviceType: z.string().optional(), // schema.org serviceType, e.g. "Plumbing repair"
+      excerpt: z.string().min(40).max(300),
+      featuredImage: image(),
+      featuredImageAlt: z.string().min(5),
+      benefits: z.array(z.string()).default([]), // check-list cards
+      process: z.array(z.object({ title: z.string(), text: z.string() })).default([]), // numbered steps
+      priceRange: z.string().optional(), // only if the client gave real prices: "$150 to $400"
+      order: z.number().default(100), // sort order on /services/
+      faq,
+      cta,
+    }),
+});
+
+/**
+ * LOCATION PAGES: /service-areas/<slug>/
+ * Either a city hub ("Plumber in Vernon Hills, IL 60061") or, when `service` is set,
+ * a service-in-city page ("Vernon Hills Emergency Plumber 60061"). City + ZIP formula applies.
+ */
+const locations = defineCollection({
+  loader: glob({ pattern: '**/index.{md,mdx}', base: './src/content/locations' }),
+  schema: ({ image }) =>
+    z.object({
+      ...seoFields,
+      city: z.string(),
+      state: z.string().length(2), // "IL"
+      zips: z.array(z.string().regex(/^\d{5}$/)).min(1), // primary ZIP first
+      county: z.string().optional(),
+      service: reference('services').optional(), // set for service-in-city pages
+      excerpt: z.string().min(40).max(300),
+      featuredImage: image().optional(), // falls back to the service image, then the site default
+      featuredImageAlt: z.string().optional(),
+      neighborhoods: z.array(z.string()).default([]),
+      nearby: z.array(reference('locations')).default([]), // nearby location pages to interlink
+      landmarks: z.array(z.string()).default([]), // real local references, only if true
+      geo: z.object({ lat: z.number(), lng: z.number() }).optional(),
+      showMap: z.boolean().default(true),
+      faq,
+      cta,
+    }),
+});
+
+export const collections = { blog, caseStudies, authors, categories, services, locations };

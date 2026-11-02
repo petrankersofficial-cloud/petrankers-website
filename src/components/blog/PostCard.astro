@@ -11,14 +11,21 @@ interface Props {
   date: Date;
   label?: string;
   headingLevel?: 'h2' | 'h3';
+  showDate?: boolean;
 }
-const { href, title, excerpt, image, imageAlt, date, label, headingLevel = 'h2' } = Astro.props;
+const { href, title, excerpt, image, imageAlt, date, label, headingLevel = 'h2', showDate = true } = Astro.props;
 const H = headingLevel;
+const meta = [label, showDate ? formatDate(date) : null].filter(Boolean);
 ---
 <article class="post-card">
   <Image src={image} alt={imageAlt} widths={[400, 700]} sizes="(max-width: 700px) 100vw, 400px" loading="lazy" />
   <div class="post-card__body">
-    <div class="post-card__meta">{label && <>{label} · </>}<time datetime={date.toISOString()}>{formatDate(date)}</time></div>
+    {meta.length > 0 && (
+      <div class="post-card__meta">
+        {label && <>{label}{showDate && ' · '}</>}
+        {showDate && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
+      </div>
+    )}
     <H class="post-card__title"><a href={href}>{title}</a></H>
     <p class="muted" style="margin:0">{excerpt}</p>
   </div>

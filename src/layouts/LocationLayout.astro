@@ -1,0 +1,132 @@
+---
+/**
+ * LOCATION PAGE TEMPLATE: /service-areas/<slug>/
+ * City hub page, or service-in-city page when `service` is set (City + ZIP + service formula).
+ */
+import { Image, getImage } from 'astro:assets';
+import { getEntry, getEntries, render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import FAQ from '../components/blog/FAQ.astro';
+import CTA from '../components/blog/CTA.astro';
+import { getLocations, getServices, locationUrl, serviceUrl, type Location } from '../lib/content';
+import { breadcrumbSchema, faqSchema, serviceSchema, webPageSchema } from '../lib/schema';
+import { site } from '../site.config';
+
+interface Props { location: Location }
+const { location } = Astro.props;
+const d = location.data;
+const { Content } = await render(location);
+const url = locationUrl(location);
+const service = d.service ? await getEntry(d.service) : undefined;
+const heroImage = d.featuredImage ?? service?.data.featuredImage;
+const heroAlt = d.featuredImageAlt ?? service?.data.featuredImageAlt ?? `${d.city}, ${d.state}`;
+const og = heroImage ? await getImage({ src: heroImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' }) : undefined;
+const allLocations = await getLocations();
+const sameCity = allLocations.filter((l) => l.id !== location.id && l.data.city === d.city && l.data.state === d.state);
+const liveIds = new Set(allLocations.map((l) => l.id));
+const nearby = (await getEntries(d.nearby)).filter((l) => l && liveIds.has(l.id));
+const services = await getServices();
+const tel = site.business.phone.replace(/[^\d+]/g, '');
+const place = `${d.city}, ${d.state} ${d.zips[0]}`;
+const mapSrc = d.geo
+  ? `https://maps.google.com/maps?q=${d.geo.lat},${d.geo.lng}&z=12&output=embed`
+  : `https://maps.google.com/maps?q=${encodeURIComponent(`${d.city}, ${d.state} ${d.zips[0]}`)}&z=12&output=embed`;
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Areas', url: '/service-areas/' },
+  { name: d.title, url },
+];
+---
+
+<BaseLayout
+  metaTitle={d.metaTitle}
+  metaDescription={d.metaDescription}
+  canonical={d.canonical}
+  noindex={d.noindex}
+  ogImage={og?.src}
+  ogImageAlt={heroAlt}
+  schema={[
+    webPageSchema(url, d.metaTitle, d.metaDescription),
+    serviceSchema({
+      url,
+      name: service ? `${service.data.serviceName} in ${d.city}, ${d.state}` : `${site.name} in ${d.city}, ${d.state}`,
+      description: d.metaDescription,
+      image: og?.src,
+      serviceType: service?.data.serviceType ?? service?.data.serviceName,
+      area: { city: d.city, state: d.state, zips: d.zips },
+    }),
+    breadcrumbSchema(crumbs),
+    faqSchema(d.faq),
+  ]}
+>
+  <section class="container service-hero">
+    <div>
+      <Breadcrumbs items={crumbs} />
+      <h1>{d.title}</h1>
+      <p class="muted" style="font-size:1.15rem">{d.excerpt}</p>
+      <div class="hero-actions">
+        <a class="btn" href={(d.cta ?? site.cta).buttonHref}>{(d.cta ?? site.cta).buttonLabel}</a>
+        <a class="btn btn--ghost" href={`tel:${tel}`}>Call {site.business.phone}</a>
+      </div>
+    </div>
+    {heroImage && <Image src={heroImage} alt={heroAlt} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 550px" loading="eager" fetchpriority="high" />}
+  </section>
+
+  <div class="container">
+    <div class="prose" data-pagefind-body>
+      <Content />
+    </div>
+
+    {(d.neighborhoods.length > 0 || d.zips.length > 1) && (
+      <section class="section">
+        <h2>Areas we cover in and around {d.city}</h2>
+        <ul class="link-grid">
+          {d.neighborhoods.map((n) => <li><span class="link-grid__item">{n}</span></li>)}
+          {d.zips.map((z) => <li><span class="link-grid__item">{d.city} {z}</span></li>)}
+        </ul>
+      </section>
+    )}
+
+    {d.showMap && (
+      <section class="section">
+        <h2>Serving {place}</h2>
+        <iframe class="map-embed" src={mapSrc} title={`Map of ${d.city}, ${d.state}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </section>
+    )}
+
+    {service && (
+      <section class="section">
+        <h2>More about {service.data.serviceName.toLowerCase()}</h2>
+        <p><a href={serviceUrl(service)}>Read our full {service.data.serviceName.toLowerCase()} service overview</a>.</p>
+      </section>
+    )}
+
+    {sameCity.length > 0 && (
+      <section class="section">
+        <h2>Other services in {d.city}</h2>
+        <ul class="link-grid">{sameCity.map((l) => <li><a href={locationUrl(l)}>{l.data.title}</a></li>)}</ul>
+      </section>
+    )}
+
+    {!service && services.length > 0 && (
+      <section class="section">
+        <h2>Our services in {d.city}</h2>
+        <ul class="link-grid">{services.map((s) => <li><a href={serviceUrl(s)}>{s.data.serviceName}</a></li>)}</ul>
+      </section>
+    )}
+
+    {nearby.length > 0 && (
+      <section class="section">
+        <h2>Nearby areas</h2>
+        <ul class="link-grid">{nearby.map((l) => <li><a href={locationUrl(l)}>{l.data.city}, {l.data.state} {l.data.zips[0]}</a></li>)}</ul>
+      </section>
+    )}
+
+    <div style="max-width:var(--content-width)">
+      <FAQ items={d.faq} />
+      <CTA cta={d.cta} />
+    </div>
+  </div>
+</BaseLayout>

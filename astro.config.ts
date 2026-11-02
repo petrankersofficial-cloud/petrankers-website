@@ -12,6 +12,8 @@ const meta = new Map<string, { lastmod?: string; exclude: boolean }>();
 for (const [dir, base] of [
   ['src/content/blog', '/blog/'],
   ['src/content/case-studies', '/case-studies/'],
+  ['src/content/services', '/services/'],
+  ['src/content/locations', '/service-areas/'],
 ] as const) {
   for (const f of globSync(`${dir}/*/index.{md,mdx}`)) {
     const { data } = matter(readFileSync(f, 'utf8'));
@@ -32,7 +34,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/404') && !meta.get(page)?.exclude,
+      filter: (page) =>
+        !/\/(404|thank-you|search|admin)\//.test(page) && !meta.get(page)?.exclude,
       serialize(item) {
         const m = meta.get(item.url);
         if (m?.lastmod) item.lastmod = m.lastmod;

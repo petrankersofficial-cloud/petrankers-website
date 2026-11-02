@@ -1,0 +1,107 @@
+---
+/**
+ * SINGLE SERVICE PAGE TEMPLATE: /services/<slug>/
+ * Hero, body copy, benefits, process, service areas for this service, FAQ, CTA.
+ */
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import FAQ from '../components/blog/FAQ.astro';
+import CTA from '../components/blog/CTA.astro';
+import { getLocations, locationUrl, getServices, serviceUrl, type Service } from '../lib/content';
+import { breadcrumbSchema, faqSchema, serviceSchema, webPageSchema } from '../lib/schema';
+import { site } from '../site.config';
+
+interface Props { service: Service }
+const { service } = Astro.props;
+const d = service.data;
+const { Content } = await render(service);
+const url = serviceUrl(service);
+const og = await getImage({ src: d.featuredImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+const areas = (await getLocations()).filter((l) => l.data.service?.id === service.id);
+const others = (await getServices()).filter((s) => s.id !== service.id);
+const tel = site.business.phone.replace(/[^\d+]/g, '');
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: d.serviceName, url },
+];
+---
+
+<BaseLayout
+  metaTitle={d.metaTitle}
+  metaDescription={d.metaDescription}
+  canonical={d.canonical}
+  noindex={d.noindex}
+  ogImage={og.src}
+  ogImageAlt={d.featuredImageAlt}
+  schema={[
+    webPageSchema(url, d.metaTitle, d.metaDescription),
+    serviceSchema({ url, name: d.serviceName, description: d.metaDescription, image: og.src, serviceType: d.serviceType, priceRange: d.priceRange, area: [...site.business.areaServed] }),
+    breadcrumbSchema(crumbs),
+    faqSchema(d.faq),
+  ]}
+>
+  <section class="container service-hero">
+    <div>
+      <Breadcrumbs items={crumbs} />
+      <h1>{d.title}</h1>
+      <p class="muted" style="font-size:1.15rem">{d.excerpt}</p>
+      <div class="hero-actions">
+        <a class="btn" href={(d.cta ?? site.cta).buttonHref}>{(d.cta ?? site.cta).buttonLabel}</a>
+        <a class="btn btn--ghost" href={`tel:${tel}`}>Call {site.business.phone}</a>
+      </div>
+    </div>
+    <Image src={d.featuredImage} alt={d.featuredImageAlt} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 550px" loading="eager" fetchpriority="high" />
+  </section>
+
+  <div class="container">
+    <div class="prose" data-pagefind-body>
+      <Content />
+    </div>
+
+    {d.benefits.length > 0 && (
+      <section class="section">
+        <h2>Why choose us for {d.serviceName.toLowerCase()}</h2>
+        <ul class="check-list">{d.benefits.map((b) => <li>{b}</li>)}</ul>
+      </section>
+    )}
+
+    {d.process.length > 0 && (
+      <section class="section" style="max-width:var(--content-width)">
+        <h2>How it works</h2>
+        <ol class="steps">{d.process.map((p) => <li><strong>{p.title}</strong><br />{p.text}</li>)}</ol>
+      </section>
+    )}
+
+    {d.priceRange && (
+      <section class="section">
+        <h2>{d.serviceName} cost</h2>
+        <p>Typical range: <strong>{d.priceRange}</strong>. Your exact price depends on the job. <a href={site.cta.buttonHref}>Get a free quote</a>.</p>
+      </section>
+    )}
+
+    {areas.length > 0 && (
+      <section class="section">
+        <h2>{d.serviceName} service areas</h2>
+        <ul class="link-grid">
+          {areas.map((l) => <li><a href={locationUrl(l)}>{l.data.city}, {l.data.state} {l.data.zips[0]}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    <div style="max-width:var(--content-width)">
+      <FAQ items={d.faq} />
+      <CTA cta={d.cta} />
+    </div>
+
+    {others.length > 0 && (
+      <section class="section">
+        <h2>Other services</h2>
+        <ul class="link-grid">{others.map((s) => <li><a href={serviceUrl(s)}>{s.data.serviceName}</a></li>)}</ul>
+      </section>
+    )}
+  </div>
+</BaseLayout>

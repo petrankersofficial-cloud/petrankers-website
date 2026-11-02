@@ -1,0 +1,60 @@
+---
+/**
+ * PRIVACY POLICY TEMPLATE. Generic starting point built from site.config.ts.
+ * Not legal advice: have the client review it, and adjust if they collect more data than listed here.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+
+const b = site.business;
+const a = site.analytics;
+const tools = [
+  (a.gtmId || a.ga4Id) && 'Google Analytics (through Google Tag Manager or gtag.js)',
+  a.cloudflareToken && 'Cloudflare Web Analytics (cookieless)',
+  a.clarityId && 'Microsoft Clarity',
+].filter(Boolean);
+const formService = { netlify: 'Netlify Forms', web3forms: 'Web3Forms', formspree: 'Formspree' }[site.forms.provider];
+---
+
+<BaseLayout metaTitle="Privacy Policy" metaDescription={`How ${site.name} collects, uses, and protects the information you share through this website.`}>
+  <article class="container page-hero">
+    <div class="prose">
+      <h1>Privacy Policy</h1>
+      <p class="muted">Effective date: {site.legal.effectiveDate}</p>
+
+      <p>{b.legalName} ("we", "us") operates {site.url}. This policy explains what information we collect through this website and how we use it.</p>
+
+      <h2>Information we collect</h2>
+      <ul>
+        <li><strong>Information you send us:</strong> when you fill out a form, we receive your name, phone number, email address, and anything you write in the message.</li>
+        <li><strong>Usage data:</strong> {tools.length ? <>we use {tools.join(', ')} to understand how visitors use the site, such as pages viewed and approximate location.</> : <>our hosting provider keeps standard server logs, such as IP address and browser type, for security and performance.</>}</li>
+      </ul>
+
+      <h2>How we use it</h2>
+      <ul>
+        <li>To respond to your request, schedule service, and send estimates.</li>
+        <li>To improve the website and our services.</li>
+        <li>To meet legal obligations.</li>
+      </ul>
+      <p>We do not sell your personal information.</p>
+
+      <h2>Service providers</h2>
+      <p>Form submissions are processed by {formService}. The website is hosted on a third-party platform. These providers process data on our behalf under their own privacy terms.</p>
+
+      <h2>Cookies</h2>
+      <p>{tools.length ? 'Some analytics tools listed above may set cookies. You can block or delete cookies in your browser settings.' : 'This website does not set tracking cookies.'}</p>
+
+      <h2>Your choices</h2>
+      <p>You can ask us to access, correct, or delete the personal information you sent us by contacting us below. Depending on where you live, you may have additional rights under local law.</p>
+
+      <h2>Children</h2>
+      <p>This website is not directed to children under 13, and we do not knowingly collect their information.</p>
+
+      <h2>Changes</h2>
+      <p>We may update this policy. The effective date at the top shows when it last changed.</p>
+
+      <h2>Contact</h2>
+      <p>{b.legalName}<br />{b.address.street}, {b.address.city}, {b.address.region} {b.address.postalCode}<br />{b.phone} · <a href={`mailto:${b.email}`}>{b.email}</a></p>
+    </div>
+  </article>
+</BaseLayout>

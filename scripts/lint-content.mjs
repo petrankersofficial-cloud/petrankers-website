@@ -29,10 +29,11 @@ const RESERVED = new Set(['page', 'category', 'tag', 'rss', 'feed', 'index']);
 const categories = new Set(JSON.parse(readFileSync('src/content/categories.json', 'utf8')).map((c) => c.id));
 const authors = new Set(JSON.parse(readFileSync('src/content/authors.json', 'utf8')).map((a) => a.id));
 
-const all = [
-  ...globSync('src/content/blog/*/index.{md,mdx}').map((f) => ({ f, type: 'blog' })),
-  ...globSync('src/content/case-studies/*/index.{md,mdx}').map((f) => ({ f, type: 'case-studies' })),
-];
+const TYPES = ['blog', 'case-studies', 'services', 'locations'];
+const all = TYPES.flatMap((t) => globSync(`src/content/${t}/*/index.{md,mdx}`).map((f) => ({ f, type: t })));
+const slugsOf = (t) => new Set(all.filter((e) => e.type === t).map((e) => matter(readFileSync(e.f, 'utf8')).data.slug));
+const serviceSlugs = slugsOf('services');
+const locationSlugs = slugsOf('locations');
 const args = process.argv.slice(2).map((a) => relative(root, a));
 const targets = args.length ? all.filter((e) => args.some((a) => e.f === a || dirname(e.f) === a)) : all;
 if (args.length && !targets.length) {
@@ -87,6 +88,38 @@ for (const { f, type } of targets) {
     if (!categories.has(data.category)) E.push(`category "${data.category}" not in categories.json (${[...categories].join(', ')})`);
     if (!authors.has(data.author)) E.push(`author "${data.author}" not in authors.json (${[...authors].join(', ')})`);
   } else if (data.author && !authors.has(data.author)) E.push(`author "${data.author}" not in authors.json`);
+
+  // Location pages: City + ZIP + service formula
+  if (type === 'locations') {
+    const zip = data.zips?.[0];
+    const city = String(data.city ?? '').toLowerCase();
+    if (data.service && !serviceSlugs.has(data.service)) E.push(`service "${data.service}" has no page in src/content/services`);
+    for (const n of data.nearby ?? []) if (!locationSlugs.has(n)) E.push(`nearby "${n}" has no page in src/content/locations`);
+    if (zip) {
+      if (!String(data.metaTitle ?? '').includes(zip)) W.push(`primary ZIP ${zip} not in metaTitle (City + ZIP rule)`);
+      if (!content.includes(zip)) W.push(`primary ZIP ${zip} not in body copy (City + ZIP rule)`);
+    }
+    if (city && !String(data.metaTitle ?? '').toLowerCase().includes(city) && !String(data.title ?? '').toLowerCase().includes(city))
+      W.push(`city "${data.city}" not in title or metaTitle`);
+    if (city && !String(data.title ?? '').toLowerCase().includes(city)) W.push(`city "${data.city}" not in title (H1)`);
+  }
+
+  // Thin / duplicate location copy: compare against other location pages
+  if (type === 'locations' && content.length > 200) {
+    const shingles = (t) => {
+      const w = t.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+      const s = new Set();
+      for (let i = 0; i + 5 <= w.length; i++) s.add(w.slice(i, i + 5).join(' '));
+      return s;
+    };
+    const mine = shingles(content);
+    for (const other of all.filter((e) => e.type === 'locations' && e.f !== f)) {
+      const theirs = shingles(matter(readFileSync(other.f, 'utf8')).content);
+      const shared = [...mine].filter((x) => theirs.has(x)).length;
+      const ratio = mine.size ? shared / mine.size : 0;
+      if (ratio > 0.6) W.push(`${Math.round(ratio * 100)}% of body text duplicates ${other.f}. Write unique local copy (doorway page risk)`);
+    }
+  }
 
   // Images exist + alt text
   if (data.featuredImage && !/^https?:/.test(data.featuredImage) && !existsSync(join(dir, data.featuredImage)))

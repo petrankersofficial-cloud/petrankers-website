@@ -39,6 +39,20 @@ npm run check      # what the host runs before deploying
 
 Then add the custom domain in the host dashboard.
 
+## What one repo gives you
+
+| Feature | Where | Cost |
+|---|---|---|
+| Blog, case studies, service pages, City + ZIP location pages | `src/content/*` | Free |
+| SEO: titles, meta, canonical, OG, schema, sitemap, RSS, robots | automatic | Free |
+| `llms.txt` for AI assistants, IndexNow pings to Bing | automatic + GitHub Action | Free |
+| Site search | Pagefind, built at deploy | Free |
+| Contact form | Netlify Forms / Web3Forms / Formspree | Free tiers |
+| Analytics | GTM, GA4, Cloudflare Web Analytics, Clarity (config IDs) | Free |
+| Privacy policy + terms | generated from config | Free |
+| WordPress import | `npm run import:wordpress` | Free |
+| Editor UI for writers | Sveltia CMS at `/admin/` (optional) | Free |
+
 ## New client checklist
 
 1. Use this repo as a template on GitHub ("Use this template") or copy it.
@@ -46,8 +60,14 @@ Then add the custom domain in the host dashboard.
 3. Drop in the design: `src/design/` (tokens, CSS, header, footer) and core pages in `src/pages/`. See `HANDOFF.md`.
 4. Replace `public/logo.svg`, `public/favicon.svg`, `public/og-default.jpg`.
 5. Set authors in `src/content/authors.json` and categories in `src/content/categories.json`.
-6. Delete the sample posts in `src/content/`.
-7. Connect the host. Optional: add the `DEPLOY_HOOK_URL` secret for scheduled posts.
+6. Delete the sample entries in `src/content/` (posts, case study, service, locations).
+7. In `src/site.config.ts` set: `forms` (on Cloudflare use `web3forms` + key), `analytics` IDs, `indexNowKey`, `legal`.
+8. Connect the host. Optional: add the `DEPLOY_HOOK_URL` secret for scheduled posts.
+9. After launch: submit `/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools, send a test form, run `npm run indexnow -- --all`.
+
+## Optional editor UI (Sveltia CMS)
+
+For writers who prefer a dashboard: set `backend.repo` in `public/admin/config.yml` to `owner/repo`, deploy, open `/admin/`, choose "Sign In with Token", and paste a GitHub fine-grained personal access token with Contents read/write on that repo. Saving an entry commits to GitHub and triggers the normal build.
 
 ## Publishing
 

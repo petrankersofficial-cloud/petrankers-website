@@ -19,8 +19,25 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
   return (await getCollection('caseStudies', ({ data }) => isLive(data))).sort(byDateDesc);
 }
 
+export type Service = CollectionEntry<'services'>;
+export type Location = CollectionEntry<'locations'>;
+
+export async function getServices(): Promise<Service[]> {
+  return (await getCollection('services', ({ data }) => isLive(data))).sort(
+    (a, b) => a.data.order - b.data.order || a.data.serviceName.localeCompare(b.data.serviceName),
+  );
+}
+
+export async function getLocations(): Promise<Location[]> {
+  return (await getCollection('locations', ({ data }) => isLive(data))).sort(
+    (a, b) => a.data.city.localeCompare(b.data.city) || a.data.title.localeCompare(b.data.title),
+  );
+}
+
 export const postUrl = (p: Post) => `/blog/${p.data.slug}/`;
 export const caseStudyUrl = (c: CaseStudy) => `/case-studies/${c.data.slug}/`;
+export const serviceUrl = (s: Service) => `/services/${s.data.slug}/`;
+export const locationUrl = (l: Location) => `/service-areas/${l.data.slug}/`;
 export const categoryUrl = (id: string) => `/blog/category/${id}/`;
 
 export function absoluteUrl(path: string): string {
