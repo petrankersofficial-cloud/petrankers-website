@@ -24,7 +24,8 @@ const cfg = readFileSync('src/site.config.ts', 'utf8');
 const SITE = cfg.match(/url:\s*'([^']+)'/)?.[1] ?? '';
 const host = SITE ? new URL(SITE).host : '';
 
-const pages = globSync(`${DIST}/**/*.html`).filter((f) => !f.startsWith(`${DIST}/admin/`) && !f.startsWith(`${DIST}/pagefind/`));
+// Normalise Windows backslashes so the path checks below work on every OS.
+const pages = globSync(`${DIST}/**/*.html`).map((f) => f.replaceAll('\\', '/')).filter((f) => !f.startsWith(`${DIST}/admin/`) && !f.startsWith(`${DIST}/pagefind/`));
 const errors = [];
 const warnings = [];
 const titles = new Map();
