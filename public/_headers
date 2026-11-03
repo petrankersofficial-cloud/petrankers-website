@@ -1,0 +1,32 @@
+# Cloudflare Pages + Netlify both read this file.
+# Merged from the live site's _headers and the starter's.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+/favicon.ico
+  Cache-Control: public, max-age=2592000
+/*.xml
+  Cache-Control: public, max-age=3600
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/_backup/*
+  X-Robots-Tag: noindex, nofollow
+/old/*
+  X-Robots-Tag: noindex, nofollow
+/uploads/*
+  X-Robots-Tag: noindex, nofollow
+/404
+  X-Robots-Tag: noindex

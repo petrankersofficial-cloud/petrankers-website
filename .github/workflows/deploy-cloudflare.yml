@@ -1,0 +1,35 @@
+# OPTIONAL ESCAPE HATCH: build in GitHub Actions, upload finished files to Cloudflare Pages.
+# Use this only if you hit the Cloudflare Pages free build limit. Builds then run on
+# GitHub's free minutes and Cloudflare just serves files (direct upload does not count as a Pages build).
+#
+# To switch on:
+#   1. Cloudflare Pages project: disconnect Git auto-builds (or create the project as "Direct Upload").
+#   2. GitHub secrets: CLOUDFLARE_API_TOKEN (Pages:Edit), CLOUDFLARE_ACCOUNT_ID.
+#   3. GitHub variable: CF_PAGES_PROJECT = your Pages project name.
+#   4. Uncomment the `push` trigger below.
+name: Deploy to Cloudflare Pages (GitHub build)
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ vars.CF_PAGES_PROJECT }} --branch=main

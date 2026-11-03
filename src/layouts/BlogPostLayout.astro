@@ -1,0 +1,112 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/**
+ * SINGLE POST TEMPLATE (the "Elementor single post template").
+ * Every blog post renders through this file. Change the layout here once, all posts update.
+ */
+import { Image, getImage } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import TOC from '../components/blog/TOC.astro';
+import AuthorBox from '../components/blog/AuthorBox.astro';
+import FAQ from '../components/blog/FAQ.astro';
+import CTA from '../components/blog/CTA.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import { formatDate, readingTime, postUrl, categoryUrl, relatedPosts, getPosts, type Post } from '../lib/content';
+import { articleSchema, breadcrumbSchema, faqSchema } from '../lib/schema';
+
+interface Props { post: Post }
+const { post } = Astro.props;
+const d = post.data;
+
+const { Content, headings } = await render(post);
+const author = await getEntry(d.author);
+const category = await getEntry(d.category);
+const related = relatedPosts(post, await getPosts());
+const url = postUrl(post);
+const minutes = readingTime(post.body);
+const og = await getImage({ src: d.featuredImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/blog/' },
+  { name: category.data.name, url: categoryUrl(category.id) },
+  { name: d.title, url },
+];
+---
+
+<BaseLayout
+  metaTitle={d.metaTitle}
+  metaDescription={d.metaDescription}
+  canonical={d.canonical}
+  noindex={d.noindex}
+  ogType="article"
+  ogImage={og.src}
+  ogImageAlt={d.featuredImageAlt}
+  publishDate={d.publishDate}
+  updatedDate={d.updatedDate}
+  schema={[
+    articleSchema({
+      type: d.schemaType,
+      url,
+      headline: d.title,
+      description: d.metaDescription,
+      image: og.src,
+      publishDate: d.publishDate,
+      updatedDate: d.updatedDate,
+      author: { name: author.data.name, url: author.data.url, sameAs: author.data.sameAs },
+      keywords: [d.focusKeyword, ...d.secondaryKeywords].filter(Boolean) as string[],
+      section: category.data.name,
+      wordCount: post.body?.split(/\s+/).length,
+    }),
+    breadcrumbSchema(crumbs),
+    faqSchema(d.faq),
+  ]}
+>
+  <article class="container">
+    <header class="post-header">
+      <Breadcrumbs items={crumbs} />
+      <h1>{d.title}</h1>
+      <div class="post-meta">
+        <span>By {author.data.url ? <a href={author.data.url}>{author.data.name}</a> : author.data.name}</span>
+        <time datetime={d.publishDate.toISOString()}>{formatDate(d.publishDate)}</time>
+        {d.updatedDate && <span>Updated <time datetime={d.updatedDate.toISOString()}>{formatDate(d.updatedDate)}</time></span>}
+        <span>{minutes} min read</span>
+        <a href={categoryUrl(category.id)}>{category.data.name}</a>
+      </div>
+    </header>
+
+    <figure class="post-featured">
+      <Image src={d.featuredImage} alt={d.featuredImageAlt} widths={[640, 960, 1280]} sizes="(max-width: 1200px) 100vw, 1200px" loading="eager" fetchpriority="high" />
+    </figure>
+
+    <div class="post-layout">
+      <div>
+        <div class="prose" data-pagefind-body>
+          <Content />
+        </div>
+        <FAQ items={d.faq} />
+        <CTA cta={d.cta} />
+        <AuthorBox {...author.data} />
+      </div>
+      <aside class="post-sidebar">
+        <div class="sticky">
+          <TOC headings={headings} />
+          <CTA cta={d.cta} variant="sidebar" />
+        </div>
+      </aside>
+    </div>
+
+    {related.length > 0 && (
+      <section class="related">
+        <h2>Related Articles</h2>
+        <div class="post-grid">
+          {related.map((p) => (
+            <PostCard href={postUrl(p)} title={p.data.title} excerpt={p.data.excerpt} image={p.data.featuredImage} imageAlt={p.data.featuredImageAlt} date={p.data.publishDate} headingLevel="h3" />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>

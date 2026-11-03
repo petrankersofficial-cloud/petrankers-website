@@ -1,0 +1,23 @@
+Copyright (c) 2026 Orrnob Mahmud. All rights reserved.
+Build ID: sbs-ebbd6a56dd25
+
+This repository ("Static Blog Starter"), including its source code, templates,
+scripts, schemas, agent instructions and documentation (the "Software"), is the
+proprietary work of Orrnob Mahmud.
+
+Permitted use
+- Orrnob Mahmud, and people working under his written authorisation, may use
+  the Software to build and maintain websites.
+- A client who receives a website built with the Software may keep using,
+  hosting and editing that website. This permission covers that website only.
+
+Not permitted without prior written permission from Orrnob Mahmud
+- Copying, redistributing, publishing, sublicensing or selling the Software, or
+  any substantial part of it, as a template, starter, theme or product.
+- Removing or changing this notice, copyright headers or build IDs.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+Third-party packages listed in package.json keep their own licences.

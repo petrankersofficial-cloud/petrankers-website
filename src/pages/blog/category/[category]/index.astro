@@ -1,0 +1,28 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import BlogListLayout from '../../../../layouts/BlogListLayout.astro';
+import { categoryArchives } from '../../../../lib/archive';
+
+export async function getStaticPaths() {
+  return (await categoryArchives()).map(({ category, pages, usedCategories }) => ({
+    params: { category: category.id },
+    props: { category, posts: pages[0], last: pages.length, usedCategories },
+  }));
+}
+const { category, posts, last, usedCategories } = Astro.props;
+const base = `/blog/category/${category.id}/`;
+---
+
+<BlogListLayout
+  posts={posts}
+  usedCategories={usedCategories}
+  current={1}
+  last={last}
+  base={base}
+  heading={category.data.name}
+  intro={category.data.description}
+  metaTitle={`${category.data.name} Articles`}
+  metaDescription={category.data.description}
+  activeCategory={category.id}
+  crumbs={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }, { name: category.data.name, url: base }]}
+/>

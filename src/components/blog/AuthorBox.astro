@@ -1,0 +1,13 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+interface Props { name: string; role: string; bio: string; avatar?: string; url?: string }
+const { name, role, bio, avatar, url } = Astro.props;
+---
+<aside class="author-box" aria-label="About the author">
+  {avatar && <img src={avatar} alt={name} width="64" height="64" loading="lazy" />}
+  <div>
+    <strong>{url ? <a href={url}>{name}</a> : name}</strong>
+    <div class="muted" style="font-size:.9rem">{role}</div>
+    <p style="margin:.5rem 0 0">{bio}</p>
+  </div>
+</aside>

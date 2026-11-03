@@ -1,0 +1,49 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/** Tracking + verification tags. Everything is off until an ID is set in site.config.ts. */
+import { site } from '../site.config';
+const a = site.analytics;
+const position = Astro.props.position ?? 'head';
+---
+
+{position === 'head' && (
+  <>
+    {a.googleVerification && <meta name="google-site-verification" content={a.googleVerification} />}
+    {a.bingVerification && <meta name="msvalidate.01" content={a.bingVerification} />}
+
+    {a.gtmId && (
+      <script is:inline define:vars={{ id: a.gtmId }}>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',id);
+      </script>
+    )}
+
+    {!a.gtmId && a.ga4Id && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${a.ga4Id}`}></script>
+        <script is:inline define:vars={{ id: a.ga4Id }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', id);
+        </script>
+      </>
+    )}
+
+    {a.clarityId && (
+      <script is:inline define:vars={{ id: a.clarityId }}>
+        (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", id);
+      </script>
+    )}
+  </>
+)}
+
+{position === 'body' && (
+  <>
+    {a.gtmId && (
+      <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${a.gtmId}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    )}
+    {a.cloudflareToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: a.cloudflareToken })}></script>
+    )}
+  </>
+)}

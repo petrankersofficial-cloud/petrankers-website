@@ -1,0 +1,182 @@
+# OPTIONAL EDITOR UI (Sveltia CMS, free). Lives at https://<site>/admin/
+# Writers sign in with a GitHub account that has access to the repo ("Sign In with Token"
+# using a fine-grained personal access token: Contents read/write on this repo). No server needed.
+# Saving commits to GitHub, which triggers the normal build. `npm run check` still guards every deploy.
+#
+# SETUP: set repo below to <github-user-or-org>/<repo-name>.
+backend:
+  name: github
+  repo: petrankersofficial-cloud/petrankers-website
+  branch: main
+  commit_messages:
+    create: 'publish: {{slug}}'
+    update: 'update: {{slug}}'
+    delete: 'delete: {{slug}}'
+
+publish_mode: simple
+media_folder: ''
+public_folder: ''
+
+collections:
+  - name: blog
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: src/content/blog
+    path: '{{slug}}/index'
+    slug: '{{fields.slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    format: frontmatter
+    extension: md
+    sortable_fields: [publishDate, title]
+    summary: '{{title}} ({{publishDate}})'
+    fields:
+      - { name: title, label: 'Title (H1)', widget: string }
+      - { name: metaTitle, label: 'Meta title (brand is added automatically, keep the final title at 60 characters or fewer)', widget: string }
+      - { name: metaDescription, label: 'Meta description (120 to 160 characters)', widget: text }
+      - { name: slug, label: 'Slug (lowercase-with-dashes)', widget: string, pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'lowercase letters, numbers, and dashes only'] }
+      - { name: publishDate, label: 'Publish date (future date = scheduled)', widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: updatedDate, label: 'Updated date', widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD', required: false }
+      - { name: author, label: 'Author id (from src/content/authors.json)', widget: string, default: editorial-team }
+      - { name: category, label: 'Category id (from src/content/categories.json)', widget: string }
+      - { name: tags, label: Tags, widget: list, required: false }
+      - { name: focusKeyword, label: Focus keyword, widget: string, required: false }
+      - { name: secondaryKeywords, label: Secondary keywords, widget: list, required: false }
+      - { name: featuredImage, label: 'Featured image (1600x900)', widget: image }
+      - { name: featuredImageAlt, label: Featured image alt text, widget: string }
+      - { name: excerpt, label: 'Excerpt (cards + RSS)', widget: text }
+      - name: faq
+        label: FAQ
+        widget: list
+        required: false
+        fields:
+          - { name: q, label: Question, widget: string }
+          - { name: a, label: Answer, widget: text }
+      - { name: draft, label: Draft (not published), widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: case-studies
+    label: Case Studies
+    label_singular: Case Study
+    folder: src/content/case-studies
+    path: '{{slug}}/index'
+    slug: '{{fields.slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    format: frontmatter
+    extension: md
+    fields:
+      - { name: title, label: 'Title (H1, lead with the result)', widget: string }
+      - { name: metaTitle, label: Meta title, widget: string }
+      - { name: metaDescription, label: Meta description, widget: text }
+      - { name: slug, label: Slug, widget: string }
+      - { name: publishDate, label: Publish date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: client, label: 'Client (or anonymized description)', widget: string }
+      - { name: industry, label: Industry, widget: string }
+      - { name: location, label: Location, widget: string, required: false }
+      - { name: services, label: Services, widget: list }
+      - { name: duration, label: Timeline, widget: string, required: false }
+      - name: results
+        label: 'Results (stat cards, real numbers only)'
+        widget: list
+        fields:
+          - { name: metric, label: Metric, widget: string }
+          - { name: before, label: Before, widget: string, required: false }
+          - { name: after, label: After, widget: string }
+          - { name: change, label: Change, widget: string, required: false }
+      - { name: featuredImage, label: Featured image, widget: image }
+      - { name: featuredImageAlt, label: Featured image alt text, widget: string }
+      - { name: excerpt, label: Excerpt, widget: text }
+      - name: testimonial
+        label: Testimonial (real quotes only)
+        widget: object
+        required: false
+        fields:
+          - { name: quote, label: Quote, widget: text }
+          - { name: name, label: Name, widget: string }
+          - { name: role, label: Role, widget: string, required: false }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: services
+    label: Service Pages
+    label_singular: Service Page
+    folder: src/content/services
+    path: '{{slug}}/index'
+    slug: '{{fields.slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    format: frontmatter
+    extension: md
+    fields:
+      - { name: title, label: Title (H1), widget: string }
+      - { name: metaTitle, label: Meta title, widget: string }
+      - { name: metaDescription, label: Meta description, widget: text }
+      - { name: slug, label: Slug, widget: string }
+      - { name: publishDate, label: Publish date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: serviceName, label: Service name, widget: string }
+      - { name: serviceType, label: Service type (schema), widget: string, required: false }
+      - { name: focusKeyword, label: Focus keyword, widget: string, required: false }
+      - { name: excerpt, label: Intro line, widget: text }
+      - { name: featuredImage, label: Image, widget: image }
+      - { name: featuredImageAlt, label: Image alt text, widget: string }
+      - { name: benefits, label: Benefits, widget: list, required: false }
+      - name: process
+        label: Process steps
+        widget: list
+        required: false
+        fields:
+          - { name: title, label: Step, widget: string }
+          - { name: text, label: Description, widget: text }
+      - { name: priceRange, label: 'Price range (real prices only)', widget: string, required: false }
+      - { name: order, label: Sort order, widget: number, default: 100 }
+      - name: faq
+        label: FAQ
+        widget: list
+        required: false
+        fields:
+          - { name: q, label: Question, widget: string }
+          - { name: a, label: Answer, widget: text }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: locations
+    label: Location Pages
+    label_singular: Location Page
+    folder: src/content/locations
+    path: '{{slug}}/index'
+    slug: '{{fields.slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    format: frontmatter
+    extension: md
+    summary: '{{title}}'
+    fields:
+      - { name: title, label: 'Title (H1, City + service + ZIP)', widget: string }
+      - { name: metaTitle, label: 'Meta title (include the ZIP)', widget: string }
+      - { name: metaDescription, label: Meta description, widget: text }
+      - { name: slug, label: Slug, widget: string }
+      - { name: publishDate, label: Publish date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: city, label: City, widget: string }
+      - { name: state, label: 'State (2 letters)', widget: string }
+      - { name: zips, label: 'ZIP codes (primary first)', widget: list }
+      - { name: county, label: County, widget: string, required: false }
+      - { name: service, label: 'Service slug (leave empty for a city hub page)', widget: string, required: false }
+      - { name: excerpt, label: Intro line, widget: text }
+      - { name: featuredImage, label: Image (optional), widget: image, required: false }
+      - { name: featuredImageAlt, label: Image alt text, widget: string, required: false }
+      - { name: neighborhoods, label: Neighborhoods, widget: list, required: false }
+      - { name: nearby, label: 'Nearby location slugs', widget: list, required: false }
+      - name: faq
+        label: FAQ
+        widget: list
+        required: false
+        fields:
+          - { name: q, label: Question, widget: string }
+          - { name: a, label: Answer, widget: text }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
