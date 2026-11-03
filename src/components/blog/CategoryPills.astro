@@ -1,0 +1,14 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import { getCollection } from 'astro:content';
+import { categoryUrl } from '../../lib/content';
+interface Props { active?: string; used: string[] }
+const { active, used } = Astro.props;
+const cats = (await getCollection('categories')).filter((c) => used.includes(c.id));
+---
+{cats.length > 1 && (
+  <ul class="category-pills">
+    <li><a href="/blog/" aria-current={!active ? 'page' : undefined}>All</a></li>
+    {cats.map((c) => <li><a href={categoryUrl(c.id)} aria-current={active === c.id ? 'page' : undefined}>{c.data.name}</a></li>)}
+  </ul>
+)}

@@ -1,0 +1,44 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/**
+ * Base page shell: head, header, footer. Every page (core pages, blog, case studies) uses this.
+ * Design swap point: src/design/* (Header, Footer, global.css, tokens.css).
+ */
+import '../design/global.css';
+import Header from '../design/Header.astro';
+import Footer from '../design/Footer.astro';
+import SEO from '../components/seo/SEO.astro';
+import Schema from '../components/seo/Schema.astro';
+import Analytics from '../components/Analytics.astro';
+import { site } from '../site.config';
+
+type SEOProps = import('../components/seo/SEO.astro').Props;
+interface Props extends SEOProps {
+  schema?: (Record<string, unknown> | null)[];
+}
+const { schema = [], ...seo } = Astro.props;
+const items = schema.filter(Boolean) as Record<string, unknown>[];
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={site.favicon} type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO {...seo} />
+    <Schema items={items} />
+    <Analytics position="head" />
+    <slot name="head" />
+  </head>
+  <body>
+    <Analytics position="body" />
+    <a class="visually-hidden" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,19 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import { site } from '../../site.config';
+interface Props { cta?: { heading: string; text: string; buttonLabel: string; buttonHref: string }; variant?: 'block' | 'sidebar' }
+const { cta = site.cta, variant = 'block' } = Astro.props;
+---
+{variant === 'block' ? (
+  <section class="cta-block">
+    <h2>{cta.heading}</h2>
+    <p>{cta.text}</p>
+    <a class="btn" href={cta.buttonHref}>{cta.buttonLabel}</a>
+  </section>
+) : (
+  <div class="sidebar-cta">
+    <strong>{cta.heading}</strong>
+    <p style="margin:.4rem 0 1rem;font-size:.95rem">{cta.text}</p>
+    <a class="btn" href={cta.buttonHref}>{cta.buttonLabel}</a>
+  </div>
+)}

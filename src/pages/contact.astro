@@ -1,0 +1,36 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/** PLACEHOLDER CONTACT PAGE: restyle with the client's design, keep <ContactForm />. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { site } from '../site.config';
+
+const a = site.business.address;
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact/' }];
+const tel = site.business.phone.replace(/[^\d+]/g, '');
+---
+
+<BaseLayout
+  metaTitle={`Contact ${site.name}`}
+  metaDescription={`Contact ${site.name} in ${a.city}, ${a.region}. Call ${site.business.phone} or send a message for a free estimate.`}
+  schema={[breadcrumbSchema(crumbs), { '@type': 'ContactPage', name: `Contact ${site.name}`, url: '/contact/' }]}
+>
+  <section class="container page-hero">
+    <Breadcrumbs items={crumbs} />
+    <h1>Contact Us</h1>
+    <p class="muted">Call <a href={`tel:${tel}`}>{site.business.phone}</a> or send us a message and we will get back to you quickly.</p>
+  </section>
+  <section class="container contact-grid">
+    <ContactForm />
+    <aside class="contact-nap">
+      <h2>{site.name}</h2>
+      <address>
+        {a.street}<br />{a.city}, {a.region} {a.postalCode}<br />
+        <a href={`tel:${tel}`}>{site.business.phone}</a><br />
+        <a href={`mailto:${site.business.email}`}>{site.business.email}</a>
+      </address>
+    </aside>
+  </section>
+</BaseLayout>

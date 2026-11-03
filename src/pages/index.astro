@@ -1,0 +1,31 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/**
+ * PLACEHOLDER HOME PAGE. Replace with the Claude Design homepage.
+ * Core pages (about, services, contact...) live in src/pages/ as .astro files wrapped in BaseLayout.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import { getPosts, postUrl } from '../lib/content';
+import { site } from '../site.config';
+
+const latest = (await getPosts()).slice(0, 3);
+---
+
+<BaseLayout metaTitle={`${site.name}`} metaDescription={site.defaultDescription}>
+  <section class="container page-hero">
+    <h1>{site.name}</h1>
+    <p class="muted">Placeholder homepage. The real design drops in here.</p>
+    <a class="btn" href={site.cta.buttonHref}>{site.cta.buttonLabel}</a>
+  </section>
+  {latest.length > 0 && (
+    <section class="container">
+      <h2>Latest from the Blog</h2>
+      <div class="post-grid">
+        {latest.map((p) => (
+          <PostCard href={postUrl(p)} title={p.data.title} excerpt={p.data.excerpt} image={p.data.featuredImage} imageAlt={p.data.featuredImageAlt} date={p.data.publishDate} headingLevel="h3" />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

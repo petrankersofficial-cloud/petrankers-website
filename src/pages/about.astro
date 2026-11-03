@@ -1,0 +1,23 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/** PLACEHOLDER ABOUT PAGE: replace with the client's Claude Design about page. Author boxes link here. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/blog/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { site } from '../site.config';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'About', url: '/about/' }];
+---
+
+<BaseLayout
+  metaTitle={`About ${site.name}`}
+  metaDescription={`Learn about ${site.name}, the team behind the work, and how we serve ${site.business.areaServed.join(', ')}.`}
+  schema={[breadcrumbSchema(crumbs), { '@type': 'AboutPage', name: `About ${site.name}`, url: '/about/' }]}
+>
+  <section class="container page-hero">
+    <Breadcrumbs items={crumbs} />
+    <h1>About {site.name}</h1>
+    <p class="muted">Placeholder about page. The real design drops in here.</p>
+    <a class="btn" href={site.cta.buttonHref}>{site.cta.buttonLabel}</a>
+  </section>
+</BaseLayout>

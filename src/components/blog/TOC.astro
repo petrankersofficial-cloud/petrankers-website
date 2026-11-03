@@ -1,0 +1,14 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import type { MarkdownHeading } from 'astro';
+interface Props { headings: MarkdownHeading[] }
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{items.length >= 3 && (
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc__title">In this article</div>
+    <ol>
+      {items.map((h) => <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+    </ol>
+  </nav>
+)}

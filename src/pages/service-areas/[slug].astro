@@ -1,0 +1,12 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import LocationLayout from '../../layouts/LocationLayout.astro';
+import { getLocations } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getLocations()).map((location) => ({ params: { slug: location.data.slug }, props: { location } }));
+}
+const { location } = Astro.props;
+---
+
+<LocationLayout location={location} />

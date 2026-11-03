@@ -1,0 +1,14 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/** Form success page. noindex. Fire a conversion event here (GTM: trigger on Page Path = /thank-you/). */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+---
+
+<BaseLayout metaTitle="Thank You" metaDescription="Your message was sent." noindex>
+  <section class="container page-hero">
+    <h1>Thank you, we got your message</h1>
+    <p class="muted">Our team will reach out shortly. Need help right now? Call <a href={`tel:${site.business.phone.replace(/[^\d+]/g, '')}`}>{site.business.phone}</a>.</p>
+    <a class="btn" href="/">Back to home</a>
+  </section>
+</BaseLayout>

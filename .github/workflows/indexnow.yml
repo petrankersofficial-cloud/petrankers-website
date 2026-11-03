@@ -1,0 +1,29 @@
+# After every push that changes content or pages, wait for the host to deploy, then ping IndexNow
+# with the new/updated URLs. Free. Does nothing until indexNowKey is set in src/site.config.ts.
+name: IndexNow ping
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/**'
+      - 'src/pages/**'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Ping changed URLs once they are live
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then BEFORE="HEAD~1"; fi
+          node scripts/indexnow.mjs --since "$BEFORE" --wait

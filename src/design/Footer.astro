@@ -1,0 +1,32 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/** PLACEHOLDER FOOTER: replace markup with the client's Claude Design footer. NAP comes from site.config. */
+import { site } from '../site.config';
+const a = site.business.address;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <strong>{site.name}</strong>
+      <address style="font-style:normal">
+        {a.street}<br />{a.city}, {a.region} {a.postalCode}<br />
+        <a href={`tel:${site.business.phone.replace(/[^\d+]/g, '')}`}>{site.business.phone}</a>
+      </address>
+    </div>
+    <nav aria-label="Footer">
+      <ul style="list-style:none;padding:0;margin:0;display:grid;gap:.4rem">
+        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+    <div>
+      <p class="muted" style="margin-top:0">&copy; {year} {site.business.legalName}. All rights reserved.</p>
+      <p style="display:flex;gap:1rem;flex-wrap:wrap">
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/terms/">Terms of Use</a>
+        {site.search.enabled && <a href="/search/">Search</a>}
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,38 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/blog/Breadcrumbs.astro';
+import { getLocations, locationUrl, type Location } from '../../lib/content';
+import { breadcrumbSchema } from '../../lib/schema';
+import { site } from '../../site.config';
+
+const locations = await getLocations();
+const byCity = new Map<string, Location[]>();
+for (const l of locations) {
+  const key = `${l.data.city}, ${l.data.state}`;
+  byCity.set(key, [...(byCity.get(key) ?? []), l]);
+}
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Service Areas', url: '/service-areas/' }];
+---
+
+<BaseLayout
+  metaTitle="Service Areas"
+  metaDescription={`See every city and ZIP code ${site.name} serves, with local service pages for each area.`}
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <section class="container page-hero">
+    <Breadcrumbs items={crumbs} />
+    <h1>Service Areas</h1>
+    <p class="muted">Find your city below.</p>
+  </section>
+  <section class="container">
+    {[...byCity.entries()].map(([city, list]) => (
+      <div class="section" style="margin-top:2rem">
+        <h2>{city}</h2>
+        <ul class="link-grid">
+          {list.map((l) => <li><a href={locationUrl(l)}>{l.data.title}</a></li>)}
+        </ul>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

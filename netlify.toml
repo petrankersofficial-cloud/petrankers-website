@@ -1,0 +1,8 @@
+# Netlify (free tier). Connect the GitHub repo in Netlify; these settings are picked up automatically.
+# Cache/security headers live in public/_headers, redirects in public/_redirects (shared with Cloudflare Pages).
+[build]
+  command = "npm run check"   # content lint + astro build. Fails the deploy if any post is invalid.
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

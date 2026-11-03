@@ -1,0 +1,18 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/**
+ * JSON-LD structured data. Pass an array of schema objects (use helpers in src/lib/schema.ts).
+ * Organization/LocalBusiness and WebSite are always included.
+ */
+import { organizationSchema, websiteSchema } from '../../lib/schema';
+
+interface Props {
+  items?: Record<string, unknown>[];
+}
+const { items = [] } = Astro.props;
+const graph = { '@context': 'https://schema.org', '@graph': [organizationSchema(), websiteSchema(), ...items] };
+// Escape < > & so content like "</script>" in a FAQ answer can never break out of the tag.
+const json = JSON.stringify(graph).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+---
+
+<script type="application/ld+json" set:html={json} />

@@ -1,0 +1,39 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/blog/Breadcrumbs.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import { caseStudyUrl, getCaseStudies } from '../../lib/content';
+import { breadcrumbSchema } from '../../lib/schema';
+import { site } from '../../site.config';
+
+const studies = await getCaseStudies();
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Case Studies', url: '/case-studies/' }];
+---
+
+<BaseLayout
+  metaTitle="Case Studies"
+  metaDescription={`Real projects and measurable results from ${site.name}. See the numbers behind our work.`}
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <section class="container page-hero">
+    <Breadcrumbs items={crumbs} />
+    <h1>Case Studies</h1>
+    <p class="muted">Real projects, real numbers.</p>
+  </section>
+  <section class="container">
+    <div class="post-grid">
+      {studies.map((c) => (
+        <PostCard
+          href={caseStudyUrl(c)}
+          title={c.data.title}
+          excerpt={c.data.results[0] ? `${c.data.results[0].metric}: ${c.data.results[0].after}${c.data.results[0].change ? ` (${c.data.results[0].change})` : ''}. ${c.data.excerpt}` : c.data.excerpt}
+          image={c.data.featuredImage}
+          imageAlt={c.data.featuredImageAlt}
+          date={c.data.publishDate}
+          label={c.data.industry}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

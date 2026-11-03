@@ -1,0 +1,32 @@
+---
+// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
+/**
+ * Site search powered by Pagefind (free, static). The index is built after `astro build`
+ * (see package.json "build"). In `npm run dev` there is no index, so search shows a notice.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout metaTitle="Search" metaDescription="Search articles, services, and case studies." noindex>
+  <link slot="head" href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <section class="container page-hero">
+    <h1>Search</h1>
+    <div id="search" class="search-box"></div>
+    <noscript><p>Search needs JavaScript. Browse the <a href="/blog/">blog</a> or <a href="/services/">services</a> instead.</p></noscript>
+  </section>
+  <script is:inline>
+    (function () {
+      var s = document.createElement('script');
+      s.src = '/pagefind/pagefind-ui.js';
+      s.onload = function () {
+        var ui = new PagefindUI({ element: '#search', showSubResults: true, showImages: false, resetStyles: false });
+        var q = new URLSearchParams(location.search).get('q');
+        if (q) ui.triggerSearch(q);
+      };
+      s.onerror = function () {
+        document.getElementById('search').innerHTML = '<p class="muted">The search index is created during the production build (npm run build).</p>';
+      };
+      document.body.appendChild(s);
+    })();
+  </script>
+</BaseLayout>
