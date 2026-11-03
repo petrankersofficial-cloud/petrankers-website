@@ -14,17 +14,22 @@ export function organizationSchema() {
     url: site.url,
     logo: absoluteUrl(site.logo),
     image: absoluteUrl(site.defaultOgImage),
-    telephone: b.phone,
+    ...(b.phone ? { telephone: b.phone } : {}),
     email: b.email,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: b.address.street,
-      addressLocality: b.address.city,
-      addressRegion: b.address.region,
-      postalCode: b.address.postalCode,
-      addressCountry: b.address.country,
-    },
-    areaServed: b.areaServed,
+    // Remote businesses publish no street address: leave PostalAddress and areaServed out instead of emitting empty fields.
+    ...(b.address.street
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: b.address.street,
+            addressLocality: b.address.city,
+            addressRegion: b.address.region,
+            postalCode: b.address.postalCode,
+            addressCountry: b.address.country,
+          },
+        }
+      : {}),
+    ...(b.areaServed.length ? { areaServed: b.areaServed } : {}),
     sameAs: b.sameAs,
   };
 }

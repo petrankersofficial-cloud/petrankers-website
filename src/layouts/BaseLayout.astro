@@ -7,6 +7,7 @@
 import '../design/global.css';
 import Header from '../design/Header.astro';
 import Footer from '../design/Footer.astro';
+import Dock from '../design/Dock.astro';
 import SEO from '../components/seo/SEO.astro';
 import Schema from '../components/seo/Schema.astro';
 import Analytics from '../components/Analytics.astro';
@@ -25,20 +26,28 @@ const items = schema.filter(Boolean) as Record<string, unknown>[];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href={site.favicon} type="image/svg+xml" />
+    <link rel="icon" href="/images/cropped-Pet-Rankers-Icon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/images/cropped-Pet-Rankers-Icon-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/images/cropped-Pet-Rankers-Icon-180x180.png" />
+    <link rel="preload" href="/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="generator" content={Astro.generator} />
     <SEO {...seo} />
     <Schema items={items} />
     <Analytics position="head" />
     <slot name="head" />
   </head>
-  <body>
+  <body class="pr">
     <Analytics position="body" />
-    <a class="visually-hidden" href="#main">Skip to content</a>
+    <a class="pr-skip" href="#main">Skip to content</a>
     <Header />
     <main id="main">
       <slot />
     </main>
     <Footer />
+    <Dock />
+    <script>
+      import '../design/script.js';
+    </script>
   </body>
 </html>

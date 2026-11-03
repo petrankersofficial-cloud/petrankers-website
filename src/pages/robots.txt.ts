@@ -6,9 +6,12 @@ export const GET: APIRoute = ({ site }) => {
   const body = [
     'User-agent: *',
     'Allow: /',
+    // Carried over from the live site's robots.txt
+    'Disallow: /_backup/',
+    'Disallow: /old/',
+    'Disallow: /uploads/',
+    // Content-system routes that should not be crawled
     'Disallow: /admin/',
-    'Disallow: /thank-you/',
-    'Disallow: /search/',
     '',
     `Sitemap: ${sitemap}`,
     '',

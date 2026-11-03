@@ -1,11 +1,31 @@
 [
   {
-    "id": "editorial-team",
-    "name": "Editorial Team",
+    "id": "hasibur-joy",
+    "name": "Hasibur Joy",
+    "role": "Founder and Director of Content Marketing",
+    "bio": "Hasibur is the Founder and Director of Content Marketing at Pet Rankers. Hasibur has 13 years experience as a writer, SEO content strategist, team lead, and agency founder. He's helped dozens of companies improve their content marketing and SEO.",
+    "avatar": "/images/Hasibur-Joy-SEO-1-300x300.webp",
+    "url": "/author-hasiburjoy1317gmail-com/",
+    "sameAs": [
+      "https://www.linkedin.com/in/hasibur-rahman-joy/"
+    ]
+  },
+  {
+    "id": "orrnob-mahmud",
+    "name": "Orrnob Mahmud",
+    "role": "Author",
+    "bio": "Articles by Orrnob Mahmud at Pet Rankers.",
+    "avatar": "/images/Orrnob-Mahmud-avatar-160.webp",
+    "url": "/author-orrnobmahmud/",
+    "sameAs": []
+  },
+  {
+    "id": "pet-rankers",
+    "name": "Pet Rankers",
     "role": "Content Team",
-    "bio": "Our in-house team writes practical guides based on real jobs we complete every week.",
-    "avatar": "/authors/editorial-team.svg",
-    "url": "/about/",
+    "bio": "Articles from the Pet Rankers team.",
+    "avatar": "/images/Petrankers.svg",
+    "url": "/author-petrankers/",
     "sameAs": []
   }
 ]

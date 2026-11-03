@@ -1,12 +1,23 @@
 ---
-// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout metaTitle="Page Not Found" noindex>
-  <section class="container page-hero">
-    <h1>Page not found</h1>
-    <p class="muted">The page you are looking for has moved or no longer exists.</p>
-    <a class="btn" href="/">Back to home</a>
+<BaseLayout
+  metaTitle={"Page not found | Pet Rankers"}
+  exactTitle
+  noindex
+>
+  <section class="pr-sec pr-hero pr-grain pr-shero pr-chero pr-404" aria-labelledby="hero-h">
+    <svg class="pr-streaks" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-linecap="round"><path d="M-80 700C260 520 520 760 860 520S1240 120 1560 220" stroke-opacity=".22" stroke-width="2"/><path d="M-80 760C280 590 540 820 880 590S1260 190 1560 290" stroke-opacity=".14" stroke-width="2"/><path d="M-80 640C240 450 500 700 840 450S1220 50 1560 150" stroke-opacity=".12" stroke-width="1.5"/><path d="M700 -40C820 160 1060 120 1180 340S1300 700 1500 760" stroke-opacity=".18" stroke-width="2"/></g></svg>
+    <div class="pr-glow pr-glow--light" style="width:720px;height:720px;right:-120px;top:-160px" aria-hidden="true"></div>
+    <div class="pr-glow pr-glow--deep" style="width:640px;height:640px;left:-260px;bottom:-260px;animation-delay:-9s" aria-hidden="true"></div>
+    <div class="pr-wrap pr-hero__grid">
+      <div class="pr-hero__copy" style="gap:18px">
+        <span class="pr-404__num" data-reveal aria-hidden="true">404</span>
+        <h1 class="pr-h1" id="hero-h" data-reveal style="--d:1">The page can’t be found.</h1>
+        <p class="pr-lead" data-reveal style="--d:2">It looks like nothing was found at this location.</p>
+        <div class="pr-actions" data-reveal style="--d:3"><a class="pr-btn pr-btn--navy" href="/">Back to home<span class="pr-btn__arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12h12M13 7l5 5-5 5"/></svg></span></a><a class="pr-btn pr-btn--outline" href="/seo-services/">Our services</a></div>
+      </div>
+    </div>
   </section>
 </BaseLayout>

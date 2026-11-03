@@ -6,7 +6,7 @@
 # SETUP: set repo below to <github-user-or-org>/<repo-name>.
 backend:
   name: github
-  repo: OWNER/REPO
+  repo: petrankersofficial-cloud/petrankers-website
   branch: main
   commit_messages:
     create: 'publish: {{slug}}'

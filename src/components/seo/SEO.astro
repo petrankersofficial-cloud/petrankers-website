@@ -8,6 +8,7 @@ import { absoluteUrl, buildTitle } from '../../lib/content';
 
 interface Props {
   metaTitle: string;
+  exactTitle?: boolean; // use metaTitle as the full <title> (no site title template)
   metaDescription?: string;
   canonical?: string;
   ogImage?: string; // absolute or root-relative URL
@@ -22,6 +23,7 @@ interface Props {
 
 const {
   metaTitle,
+  exactTitle = false,
   metaDescription = site.defaultDescription,
   canonical,
   ogImage = site.defaultOgImage,
@@ -34,7 +36,7 @@ const {
   next,
 } = Astro.props;
 
-const title = buildTitle(metaTitle);
+const title = exactTitle ? metaTitle : buildTitle(metaTitle);
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site.url).toString();
 const image = absoluteUrl(ogImage);
 ---

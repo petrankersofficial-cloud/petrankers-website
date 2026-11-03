@@ -1,61 +1,126 @@
 ---
-// © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25
-/**
- * PRIVACY POLICY TEMPLATE. Generic starting point built from site.config.ts.
- * Not legal advice: have the client review it, and adjust if they collect more data than listed here.
- */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../site.config';
-
-const b = site.business;
-const a = site.analytics;
-const tools = [
-  (a.gtmId || a.ga4Id) && 'Google Analytics (through Google Tag Manager or gtag.js)',
-  a.cloudflareToken && 'Cloudflare Web Analytics (cookieless)',
-  a.clarityId && 'Microsoft Clarity',
-].filter(Boolean);
-const formService = { netlify: 'Netlify Forms', web3forms: 'Web3Forms', formspree: 'Formspree' }[site.forms.provider];
 ---
 
-<BaseLayout metaTitle="Privacy Policy" metaDescription={`How ${site.name} collects, uses, and protects the information you share through this website.`}>
-  <article class="container page-hero">
-    <div class="prose">
-      <h1>Privacy Policy</h1>
-      <p class="muted">Effective date: {site.legal.effectiveDate}</p>
-
-      <p>{b.legalName} ("we", "us") operates {site.url}. This policy explains what information we collect through this website and how we use it.</p>
-
-      <h2>Information we collect</h2>
-      <ul>
-        <li><strong>Information you send us:</strong> when you fill out a form, we receive your name, phone number, email address, and anything you write in the message.</li>
-        <li><strong>Usage data:</strong> {tools.length ? <>we use {tools.join(', ')} to understand how visitors use the site, such as pages viewed and approximate location.</> : <>our hosting provider keeps standard server logs, such as IP address and browser type, for security and performance.</>}</li>
-      </ul>
-
-      <h2>How we use it</h2>
-      <ul>
-        <li>To respond to your request, schedule service, and send estimates.</li>
-        <li>To improve the website and our services.</li>
-        <li>To meet legal obligations.</li>
-      </ul>
-      <p>We do not sell your personal information.</p>
-
-      <h2>Service providers</h2>
-      <p>Form submissions are processed by {formService}. The website is hosted on a third-party platform. These providers process data on our behalf under their own privacy terms.</p>
-
-      <h2>Cookies</h2>
-      <p>{tools.length ? 'Some analytics tools listed above may set cookies. You can block or delete cookies in your browser settings.' : 'This website does not set tracking cookies.'}</p>
-
-      <h2>Your choices</h2>
-      <p>You can ask us to access, correct, or delete the personal information you sent us by contacting us below. Depending on where you live, you may have additional rights under local law.</p>
-
-      <h2>Children</h2>
-      <p>This website is not directed to children under 13, and we do not knowingly collect their information.</p>
-
-      <h2>Changes</h2>
-      <p>We may update this policy. The effective date at the top shows when it last changed.</p>
-
-      <h2>Contact</h2>
-      <p>{b.legalName}<br />{b.address.street}, {b.address.city}, {b.address.region} {b.address.postalCode}<br />{b.phone} · <a href={`mailto:${b.email}`}>{b.email}</a></p>
+<BaseLayout
+  metaTitle={"Privacy Policy | Pet Rankers"}
+  exactTitle
+  metaDescription={"Your privacy matters to us. This page explains what information we collect when you visit PetRankers or work with us, how we use it, and how we keep it safe."}
+  canonical={"https://petrankers.com/privacy-policy/"}
+  ogImage={"https://petrankers.com/images/pet-business-seo-agency-google-maps-bookings.webp"}
+  ogImageAlt={"Pet Rankers, the SEO agency for pet businesses, with a phone showing a \"dog groomer near me\" Google Maps search."}
+>
+  <section class="pr-sec pr-hero pr-grain pr-shero pr-chero pr-legal-hero" aria-labelledby="hero-h">
+    <svg class="pr-streaks" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-linecap="round"><path d="M-80 700C260 520 520 760 860 520S1240 120 1560 220" stroke-opacity=".22" stroke-width="2"/><path d="M-80 760C280 590 540 820 880 590S1260 190 1560 290" stroke-opacity=".14" stroke-width="2"/><path d="M-80 640C240 450 500 700 840 450S1220 50 1560 150" stroke-opacity=".12" stroke-width="1.5"/><path d="M700 -40C820 160 1060 120 1180 340S1300 700 1500 760" stroke-opacity=".18" stroke-width="2"/></g></svg>
+    <div class="pr-glow pr-glow--light" style="width:720px;height:720px;right:-120px;top:-160px" aria-hidden="true"></div>
+    <div class="pr-glow pr-glow--deep" style="width:640px;height:640px;left:-260px;bottom:-260px;animation-delay:-9s" aria-hidden="true"></div>
+    <div class="pr-wrap pr-hero__grid">
+      <div class="pr-hero__copy">
+        <div class="pr-shero__chips" data-reveal><span>Legal</span><span>12 sections</span></div>
+        <h1 class="pr-h1" id="hero-h" data-reveal style="--d:1">Privacy policy</h1>
+        <p class="pr-lead" data-reveal style="--d:2">Your privacy matters to us. This page explains what information we collect when you visit PetRankers or work with us, how we use it, and how we keep it safe. No confusing legal language, just a straight answer on how we handle your data.</p>
+        <p class="pr-lead" data-reveal style="--d:3">By using our Services, you agree to the practices described in this policy. If you do not agree, please do not use our website or Services.</p>
+      </div>
     </div>
-  </article>
+  </section>
+  
+  <section class="pr-sec pr-sec--cream pr-orn2 pr-legal" aria-label="Privacy policy">
+    <svg class="pr-orn2__lines" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#FF6A00" stroke-linecap="round"><path d="M-80 560C260 380 520 620 860 400S1240 40 1560 160" stroke-opacity=".28" stroke-width="2"/><path d="M-80 640C280 460 540 700 880 480S1260 120 1560 240" stroke-opacity=".16" stroke-width="2"/><path d="M-80 480C240 300 500 540 840 320S1220 -40 1560 80" stroke-opacity=".12" stroke-width="1.5"/></g></svg>
+    <span class="pr-orn2__dots" aria-hidden="true"></span>
+    <div class="pr-glow pr-glow--soft" style="width:520px;height:520px;right:-220px;top:10%" aria-hidden="true"></div>
+    <div class="pr-wrap pr-legal__grid">
+      <aside class="pr-legal__toc" aria-label="On this page">
+        <details class="pr-legal__dd" data-toc-dd open>
+          <summary class="pr-legal__toch"><span>On this page</span><i aria-hidden="true"></i></summary>
+          <nav><ol>
+          <li><a href="#changes-to-this-privacy-policy" data-toc="changes-to-this-privacy-policy"><b>01</b>Changes to This Privacy Policy</a></li>
+          <li><a href="#information-we-collect" data-toc="information-we-collect"><b>02</b>Information We Collect</a></li>
+          <li><a href="#how-we-use-your-information" data-toc="how-we-use-your-information"><b>03</b>How We Use Your Information</a></li>
+          <li><a href="#how-we-share-your-information" data-toc="how-we-share-your-information"><b>04</b>How We Share Your Information</a></li>
+          <li><a href="#cookies" data-toc="cookies"><b>05</b>Cookies</a></li>
+          <li><a href="#third-party-links" data-toc="third-party-links"><b>06</b>Third-Party Links</a></li>
+          <li><a href="#data-retention" data-toc="data-retention"><b>07</b>Data Retention</a></li>
+          <li><a href="#your-privacy-rights" data-toc="your-privacy-rights"><b>08</b>Your Privacy Rights</a></li>
+          <li><a href="#children-s-privacy" data-toc="children-s-privacy"><b>09</b>Children’s Privacy</a></li>
+          <li><a href="#security" data-toc="security"><b>10</b>Security</a></li>
+          <li><a href="#international-users" data-toc="international-users"><b>11</b>International Users</a></li>
+          <li><a href="#contact-us" data-toc="contact-us"><b>12</b>Contact Us</a></li>
+        </ol></nav>
+        </details>
+        <a class="pr-legal__other" href="/terms-of-service/">Read our Terms of Service<span class="pr-btn__arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12h12M13 7l5 5-5 5"/></svg></span></a>
+      </aside>
+      <div class="pr-legal__body">
+        <section class="pr-legal__sec" id="changes-to-this-privacy-policy" aria-labelledby="changes-to-this-privacy-policy-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">01</span>
+          <h2 id="changes-to-this-privacy-policy-h">Changes to This Privacy Policy</h2>
+          <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for legal and operational reasons. When we do, we will update the “Last Updated” date at the top of this page. We encourage you to review this page periodically.</p>
+        </section>
+        <section class="pr-legal__sec" id="information-we-collect" aria-labelledby="information-we-collect-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">02</span>
+          <h2 id="information-we-collect-h">Information We Collect</h2>
+          <h3>Information You Provide Directly</h3><p>When you interact with PetRankers, you may provide us with:</p><ul class="pr-checks"><li>Contact details including your name, email address, and phone number</li><li>Business information including your grooming business name, location, and website URL</li><li>Consultation or audit request details including the information you submit through our forms</li><li>Communications including any messages, questions, or feedback you send us</li></ul><h3>Information Collected Automatically</h3><p>When you visit our website, we may automatically collect certain usage data including:</p><ul class="pr-checks"><li>Device and browser information</li><li>IP address and general location data</li><li>Pages visited and time spent on our site</li><li>Referral source (how you found us)</li></ul><p>We use cookies and similar tracking technologies to collect this data. You can control cookie preferences through your browser settings.</p><h3>Information from Third Parties</h3><p>We may receive information about you from third-party tools and platforms we use to operate our business, including Google Analytics, CRM platforms, and scheduling tools.</p>
+        </section>
+        <section class="pr-legal__sec" id="how-we-use-your-information" aria-labelledby="how-we-use-your-information-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">03</span>
+          <h2 id="how-we-use-your-information-h">How We Use Your Information</h2>
+          <p>We use the information we collect to:</p><ul class="pr-checks"><li>Respond to your consultation requests and free SEO audit inquiries</li><li>Deliver and manage the SEO services you have engaged us for</li><li>Send service updates, reports, and communications related to your account</li><li>Send marketing emails about our services (you can opt out at any time)</li><li>Improve our website and service offerings</li><li>Comply with legal obligations and protect our business interests</li></ul>
+        </section>
+        <section class="pr-legal__sec" id="how-we-share-your-information" aria-labelledby="how-we-share-your-information-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">04</span>
+          <h2 id="how-we-share-your-information-h">How We Share Your Information</h2>
+          <p>We do not sell your personal information. We may share your information with trusted third-party service providers who help us operate our business, including:</p><ul class="pr-checks"><li>Email and CRM platforms (e.g., for sending reports and communications)</li><li>Scheduling tools (e.g., for booking consultations)</li><li>Analytics platforms (e.g., for understanding website traffic)</li><li>Cloud storage and project management tools</li></ul><p>These providers are only permitted to use your information to perform services on our behalf and are required to keep it confidential.</p><p>We may also disclose your information if required by law, to protect our rights, or in connection with a business transfer such as a merger or acquisition.</p>
+        </section>
+        <section class="pr-legal__sec" id="cookies" aria-labelledby="cookies-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">05</span>
+          <h2 id="cookies-h">Cookies</h2>
+          <p>We use cookies to improve your experience on our website and understand how visitors interact with our content. Cookies help us track which pages perform well and how leads reach our audit request form.</p><p>You can disable cookies through your browser settings. Note that doing so may affect certain functionality on our site.</p><p>We also recognize the Global Privacy Control (GPC) signal. If you enable GPC on your browser, we will treat it as a valid opt-out of targeted advertising for that browser or device.</p>
+        </section>
+        <section class="pr-legal__sec" id="third-party-links" aria-labelledby="third-party-links-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">06</span>
+          <h2 id="third-party-links-h">Third-Party Links</h2>
+          <p>Our website may contain links to third-party websites including Google, industry blogs, or partner resources. We are not responsible for the privacy practices of those sites. We encourage you to review the privacy policies of any third-party sites you visit.</p>
+        </section>
+        <section class="pr-legal__sec" id="data-retention" aria-labelledby="data-retention-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">07</span>
+          <h2 id="data-retention-h">Data Retention</h2>
+          <p>We retain your personal information for as long as necessary to provide our services, maintain our business relationship, comply with legal obligations, and resolve any disputes. When your data is no longer needed, we securely delete or anonymize it.</p>
+        </section>
+        <section class="pr-legal__sec" id="your-privacy-rights" aria-labelledby="your-privacy-rights-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">08</span>
+          <h2 id="your-privacy-rights-h">Your Privacy Rights</h2>
+          <p>Depending on where you are located, you may have the right to:</p><ul class="pr-checks"><li>Access the personal information we hold about you</li><li>Request correction of inaccurate information</li><li>Request deletion of your personal information</li><li>Opt out of marketing communications</li><li>Withdraw consent where we rely on it to process your data</li><li>Lodge a complaint with your local data protection authority</li></ul><p>To exercise any of these rights, contact us using the details below. We will respond in a timely manner and will not discriminate against you for making a request.</p>
+        </section>
+        <section class="pr-legal__sec" id="children-s-privacy" aria-labelledby="children-s-privacy-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">09</span>
+          <h2 id="children-s-privacy-h">Children’s Privacy</h2>
+          <p>Our Services are intended for business owners and professionals in the pet grooming industry. We do not knowingly collect personal information from anyone under the age of 18. If you believe a minor has submitted information to us, please contact us and we will delete it promptly.</p>
+        </section>
+        <section class="pr-legal__sec" id="security" aria-labelledby="security-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">10</span>
+          <h2 id="security-h">Security</h2>
+          <p>We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet is 100% secure. We recommend that you do not share sensitive information through unsecured channels.</p>
+        </section>
+        <section class="pr-legal__sec" id="international-users" aria-labelledby="international-users-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">11</span>
+          <h2 id="international-users-h">International Users</h2>
+          <p>If you are accessing our Services from outside the country where PetRankers is based, please be aware that your information may be transferred to and processed in a different country. We take steps to ensure your data is handled in accordance with applicable privacy laws.</p>
+        </section>
+        <section class="pr-legal__sec" id="contact-us" aria-labelledby="contact-us-h" data-reveal>
+          <span class="pr-legal__num" aria-hidden="true">12</span>
+          <h2 id="contact-us-h">Contact Us</h2>
+          <p>If you have any questions about this Privacy Policy or want to exercise your privacy rights, please reach out:</p><div class="pr-legal__contact"><a href="mailto:seo@petrankers.com"><span>Email</span><b>seo@petrankers.com</b></a><a href="/"><span>Website</span><b>petrankers.com</b></a></div>
+        </section>
+      </div>
+    </div>
+  </section>
+  
+  <section class="pr-sec pr-sec--navy pr-grain pr-orn pr-legal-cta" aria-labelledby="lcta-h">
+    <svg class="pr-streaks" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#FF6A00" stroke-linecap="round"><path d="M-80 640C260 460 520 700 860 480S1240 120 1560 240" stroke-opacity=".34" stroke-width="2"/><path d="M-80 720C280 540 540 780 880 560S1260 200 1560 320" stroke-opacity=".2" stroke-width="2"/><path d="M-80 560C240 380 500 620 840 400S1220 40 1560 160" stroke-opacity=".16" stroke-width="1.5"/></g></svg>
+    <div class="pr-glow pr-glow--orange" style="width:560px;height:560px;left:50%;top:50%;margin:-280px 0 0 -280px;opacity:.45" aria-hidden="true"></div>
+    <div class="pr-wrap pr-legal-cta__in">
+      <h2 class="pr-h2" id="lcta-h" data-reveal>Questions About Our Policy? <em class="hl">Let’s Talk</em></h2>
+      <p class="pr-lead" data-reveal style="--d:1">Most agencies hide behind legal pages. We’d rather just talk to you directly.</p>
+      <div class="pr-actions" data-reveal style="--d:2"><a class="pr-btn pr-btn--primary" href="/contact/">Schedule a Call<span class="pr-btn__arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12h12M13 7l5 5-5 5"/></svg></span></a><a class="pr-btn pr-btn--outline-light" href="mailto:seo@petrankers.com">seo@petrankers.com</a></div>
+    </div>
+  </section>
 </BaseLayout>

@@ -5,51 +5,53 @@
  * NAP, nav, CTA) is read from here by the templates.
  */
 export const site = {
-  name: 'Client Business Name',
-  url: 'https://www.example.com', // production URL, no trailing slash (single source of truth)
-  titleTemplate: '%s | Client Business Name', // %s = page metaTitle (skipped if metaTitle already contains the brand)
-  defaultDescription: 'Short default meta description for pages that do not set one.',
+  name: 'Pet Rankers',
+  url: 'https://petrankers.com', // production URL, no trailing slash (single source of truth)
+  titleTemplate: '%s | Pet Rankers', // %s = page metaTitle (skipped if metaTitle already contains the brand)
+  defaultDescription: 'Pet Rankers helps groomers, sitters, boarders and vet clinics rank #1 on Google Maps and in AI search. Get a free 48-hour audit and start booking more calls.',
   locale: 'en_US',
   lang: 'en',
 
   // Used for social cards when a post has no featured image. Put the file in /public.
-  defaultOgImage: '/og-default.jpg',
-  logo: '/logo.svg',
-  favicon: '/favicon.svg',
+  defaultOgImage: '/images/pet-business-seo-agency-google-maps-bookings.webp',
+  logo: '/images/Petrankers.svg',
+  favicon: '/images/cropped-Pet-Rankers-Icon-192x192.png',
 
   // Organization / LocalBusiness schema (rendered on every page)
   business: {
-    type: 'LocalBusiness', // e.g. Plumber, Dentist, RoofingContractor, LocalBusiness, Organization
-    legalName: 'Client Business Name LLC',
-    phone: '(000) 000-0000',
-    email: 'hello@example.com',
+    type: 'Organization',
+    legalName: 'Pet Rankers',
+    phone: '',
+    email: 'seo@petrankers.com',
+    // Pet Rankers is a remote agency: no street address is published on the live site.
     address: {
-      street: '123 Main St',
-      city: 'City',
-      region: 'ST',
-      postalCode: '00000',
-      country: 'US',
+      street: '',
+      city: '',
+      region: '',
+      postalCode: '',
+      country: '',
     },
-    areaServed: ['City', 'Nearby City'],
+    areaServed: [] as string[],
     sameAs: [
-      // 'https://www.facebook.com/...',
-      // 'https://www.google.com/maps?cid=...',
+      'https://www.facebook.com/petrankers/',
+      'https://www.instagram.com/petrankers/',
+      'https://www.linkedin.com/company/pet-rankers/',
     ],
   },
 
+  // The header/footer markup lives in src/design/ (ported from the live site); nav is used by templates and llms.txt.
   nav: [
-    { label: 'Home', href: '/' },
-    { label: 'Services', href: '/services/' },
-    { label: 'Case Studies', href: '/case-studies/' },
-    { label: 'Blog', href: '/blog/' },
+    { label: 'SEO Services', href: '/seo-services/' },
+    { label: 'Website Development', href: '/website-development/' },
+    { label: 'About Us', href: '/about-us/' },
     { label: 'Contact', href: '/contact/' },
   ],
 
   // Default CTA block at the end of every post (a post can override with `cta` in frontmatter)
   cta: {
-    heading: 'Need help with this?',
-    text: 'Talk to our team today and get a free estimate.',
-    buttonLabel: 'Get a Free Quote',
+    heading: 'Get ahead on AI visibility',
+    text: 'We’re already building AI visibility for pet groomers. Your competitors almost certainly aren’t. This is your window to get ahead.',
+    buttonLabel: 'Schedule a Call',
     buttonHref: '/contact/',
   },
 
@@ -77,7 +79,7 @@ export const site = {
     provider: 'netlify' as 'netlify' | 'web3forms' | 'formspree',
     web3formsKey: '',
     formspreeId: '',
-    successPath: '/thank-you/',
+    successPath: '/thank-you/', // unused: the live site books calls through the Google Calendar embed on /contact/
     services: ['General inquiry', 'Free estimate', 'Emergency service'], // dropdown options
   },
 
@@ -93,7 +95,7 @@ export const site = {
 
   // Site search (Pagefind, free, built at deploy time)
   search: {
-    enabled: true,
+    enabled: false, // the live site has no search page (13 pages); turn on and restore src/pages/search.astro if the blog grows
   },
 
   // Content rules enforced by `npm run lint:content`

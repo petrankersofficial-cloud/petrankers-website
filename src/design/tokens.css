@@ -1,35 +1,30 @@
-/* © 2026 Orrnob Mahmud. All rights reserved. Proprietary, see LICENSE. Build sbs-ebbd6a56dd25 */
-/*
-  DESIGN TOKENS: swap these for the client's Claude Design values.
-  Every component in the starter reads only these variables, so changing
-  this file re-skins the whole blog + case study system.
-*/
+/* © Pet Rankers. Tokens mapped from the live site (_legacy/brand.css :root). The template classes in global.css read only these. */
 :root {
   /* Brand */
-  --color-primary: #1f4fd6;
+  --color-primary: #0f1b33;          /* --pr-navy */
   --color-primary-contrast: #ffffff;
-  --color-accent: #f5a524;
+  --color-accent: #ff6a00;           /* --pr-orange */
 
   /* Neutrals */
-  --color-bg: #ffffff;
-  --color-surface: #f5f6f8;
-  --color-border: #e3e6eb;
-  --color-text: #15181d;
-  --color-text-muted: #5b6370;
+  --color-bg: #faf8f5;               /* --pr-bg */
+  --color-surface: #fff3e8;          /* --pr-cream */
+  --color-border: rgba(15, 27, 51, 0.12);
+  --color-text: #1a1a1a;             /* --pr-ink */
+  --color-text-muted: #6b6b6b;       /* --pr-muted */
 
   /* Type */
-  --font-heading: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-heading: 'Bricolage Grotesque', 'Bricolage Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Bricolage Grotesque', 'Bricolage Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fs-base: 1.0625rem;
-  --fs-h1: clamp(2rem, 4vw, 3rem);
-  --fs-h2: clamp(1.5rem, 2.6vw, 2rem);
+  --fs-h1: clamp(2.5rem, 5.4vw, 4.4rem);
+  --fs-h2: clamp(1.75rem, 3.2vw, 2.4rem);
   --fs-h3: 1.3rem;
-  --lh-body: 1.7;
+  --lh-body: 1.6;
 
   /* Layout */
-  --container: 1200px;
+  --container: 1180px;
   --content-width: 720px;
-  --radius: 14px;
+  --radius: 22px;
   --gap: 1.5rem;
-  --shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
+  --shadow: 0 1px 2px rgba(15, 27, 51, 0.04), 0 12px 32px -12px rgba(15, 27, 51, 0.12);
 }

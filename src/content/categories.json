@@ -1,17 +1,7 @@
 [
   {
-    "id": "guides",
-    "name": "Guides",
-    "description": "Step-by-step guides and practical how-tos."
-  },
-  {
-    "id": "costs",
-    "name": "Costs and Pricing",
-    "description": "What things cost, what drives the price, and how to budget."
-  },
-  {
-    "id": "news",
-    "name": "News",
-    "description": "Company news and local updates."
+    "id": "uncategorized",
+    "name": "Uncategorized",
+    "description": "Browse Pet Rankers articles on local SEO, client reporting and growing a pet business on Google Maps."
   }
 ]
