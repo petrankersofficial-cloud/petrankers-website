@@ -1,9 +1,9 @@
 # Static Blog Starter
 
-Free, agent-first site template: Astro + GitHub + Netlify or Cloudflare Pages.
+Free, agent-first site template: Astro + GitHub + Cloudflare Workers (static assets).
 Core pages are hand-designed. Blogs and case studies are Markdown files that render through fixed templates with all SEO handled automatically.
 
-**Cost: $0** beyond the domain. Astro is free open-source software, GitHub repos are free, and both hosts' free tiers run the build.
+**Cost: $0** beyond the domain. Astro is free open-source software, GitHub repos are free, and Cloudflare's free tier runs the build and hosts the site.
 
 ## How it works
 
@@ -12,7 +12,7 @@ Agent writes src/content/blog/<slug>/index.md + images
         |
    git push to GitHub (main)
         |
-Netlify / Cloudflare Pages runs: npm run check  (lint + build; invalid content fails here)
+Cloudflare Workers Builds runs: npm run check  (lint + build; invalid content fails here)
         |
 Static HTML goes live in about 1 to 2 minutes
 ```
@@ -29,13 +29,12 @@ npm run check      # what the host runs before deploying: content lint + build +
 
 ## Deploy (one time per site)
 
-**Cloudflare Pages:** Workers & Pages > Create > Pages > Connect to Git > pick the repo.
-- Framework preset: Astro
+**Cloudflare Workers (static assets):** Workers & Pages > Create > Import a repository > pick the repo.
 - Build command: `npm run check`
-- Output directory: `dist`
+- Deploy command: `npx wrangler deploy` (reads `wrangler.jsonc`, which serves `./dist`)
 - Environment variable: `NODE_VERSION` = `22`
-
-**Netlify:** Add new site > Import from Git > pick the repo. `netlify.toml` sets everything.
+- `wrangler.jsonc` sets `html_handling: auto-trailing-slash` (matches the site's trailing-slash URLs) and `not_found_handling: 404-page` (serves `/404.html`).
+- Headers and redirects live in `public/_headers` and `public/_redirects`, which Workers static assets read.
 
 Then add the custom domain in the host dashboard.
 
@@ -61,7 +60,7 @@ Run from this repo. The live site does not change until you merge the PR.
 npm run install:client -- owner/client-repo
 ```
 
-It clones the client repo next to this one, creates branch `add-content-system`, moves the current site into `_legacy/`, merges this starter, and links it as remote `starter`. Add `--pr` to push the branch and open a draft PR (Netlify posts a deploy preview). Your GitHub account needs write access to the client repo (the client adds you as a collaborator).
+It clones the client repo next to this one, creates branch `add-content-system`, moves the current site into `_legacy/`, merges this starter, and links it as remote `starter`. Add `--pr` to push the branch and open a draft PR (Workers Builds posts a preview deployment on the PR). Your GitHub account needs write access to the client repo (the client adds you as a collaborator).
 
 Then port the pages in `_legacy/` into the system (checklist below, from step 2, or the `/install-client` skill), delete `_legacy/`, run `npm run check`, and merge the PR.
 
