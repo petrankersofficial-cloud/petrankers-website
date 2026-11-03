@@ -67,6 +67,10 @@ The design layer is isolated in `src/design/`. Do this in order:
 8. **Clean up:** delete all sample entries in `src/content/` (2 posts, 1 case study, 1 service, 3 locations), set real authors/categories JSON, set `site.forms`, `site.analytics`, `site.indexNowKey`, `site.legal`, and `backend.repo` in `public/admin/config.yml`. Run `npm run check`, open `npm run dev` and visually check: home, `/services/`, a service, `/service-areas/`, a location, `/blog/`, a post, a category page, `/case-studies/`, a case study, `/contact/`, 404, mobile width.
 9. If migrating from WordPress, run the importer (`/migrate-wordpress`) and add old page URLs to `public/_redirects`.
 
+## Client sites on their own GitHub
+
+Client sites live in the client's own GitHub repo, already designed and live. Do not use "Use this template" for those. Run `npm run install:client -- owner/repo` from this repo (skill `/install-client`): it installs the system on branch `add-content-system` with the old site in `_legacy/`, then port the design using the steps above. Inside a client repo, `npm run starter:update` pulls later starter improvements and keeps client-owned files (`src/content/`, `src/design/`, core pages, logos, `_redirects`, README).
+
 ## Next.js version (dormant)
 
 If the user asks for a Next.js version of this system, or to add it to an existing Next.js site (their own portfolio is Next.js), read `.nextjs-port.md` in the repo root. It has the full port plan, constraints, and acceptance tests. Do nothing with it until asked.

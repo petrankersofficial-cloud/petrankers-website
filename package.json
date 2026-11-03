@@ -17,7 +17,9 @@
     "featured-image": "node scripts/make-featured-image.mjs",
     "new:service": "node scripts/new-entry.mjs services",
     "new:location": "node scripts/new-entry.mjs locations",
-    "qa": "node scripts/qa-site.mjs"
+    "qa": "node scripts/qa-site.mjs",
+    "install:client": "node scripts/install-into-client.mjs",
+    "starter:update": "node scripts/update-from-starter.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

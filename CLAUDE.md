@@ -10,5 +10,6 @@ Claude-specific shortcuts:
 - `/publish-service-page` skill: create or update a service page.
 - `/publish-location-pages` skill: City + ZIP + service pages, one or many.
 - `/migrate-wordpress` skill: import a WordPress export with SEO meta and 301s.
+- `/install-client` skill: install this system into a client's existing GitHub repo and port the live design; also pulls starter updates.
 
 New to this repo in a fresh session? Read HANDOFF.md first.

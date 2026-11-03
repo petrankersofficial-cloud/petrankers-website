@@ -53,9 +53,29 @@ Then add the custom domain in the host dashboard.
 | WordPress import | `npm run import:wordpress` | Free |
 | Editor UI for writers | Sveltia CMS at `/admin/` (optional) | Free |
 
+## Client site already on its own GitHub (the usual case)
+
+Run from this repo. The live site does not change until you merge the PR.
+
+```
+npm run install:client -- owner/client-repo
+```
+
+It clones the client repo next to this one, creates branch `add-content-system`, moves the current site into `_legacy/`, merges this starter, and links it as remote `starter`. Add `--pr` to push the branch and open a draft PR (Netlify posts a deploy preview). Your GitHub account needs write access to the client repo (the client adds you as a collaborator).
+
+Then port the pages in `_legacy/` into the system (checklist below, from step 2, or the `/install-client` skill), delete `_legacy/`, run `npm run check`, and merge the PR.
+
+**Pull later starter improvements** into a client site, from inside the client repo:
+
+```
+npm run starter:update -- --pr
+```
+
+It merges the latest starter on a new branch, keeps the client's content, design, core pages, logos, and redirects, drops new sample posts, and runs `npm run check` before pushing. If a system file was changed on both sides (for example a restyled layout), it stops and lists the files.
+
 ## New client checklist
 
-1. Use this repo as a template on GitHub ("Use this template") or copy it.
+1. Client repo already exists: `npm run install:client` (above). New site with no repo: "Use this template" on GitHub, or copy this repo.
 2. Edit `src/site.config.ts` (name, URL, NAP, nav, CTA).
 3. Drop in the design: `src/design/` (tokens, CSS, header, footer) and core pages in `src/pages/`. See `HANDOFF.md`. **Designing from scratch?** Paste the prompt in `docs/CLAUDE-DESIGN-SPEC.md` into Claude Design first, so the design ports in minutes.
 4. Replace `public/logo.svg`, `public/favicon.svg`, `public/og-default.jpg`.
