@@ -36,7 +36,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !/\/(404|thank-you|search|admin|author-orrnobmahmud|author-petrankers)\//.test(page) && !/\/blog\/$/.test(page) && !meta.get(page)?.exclude,
+        !/\/(404|thank-you|search|admin|author-orrnobmahmud|author-petrankers)\//.test(page) && !meta.get(page)?.exclude,
       serialize(item) {
         const m = meta.get(item.url);
         if (m?.lastmod) item.lastmod = m.lastmod;

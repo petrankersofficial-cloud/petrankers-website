@@ -47,12 +47,6 @@
 /category/uncategorized/ /category-uncategorized/ 301
 /category/uncategorized /category-uncategorized/ 301
 
-# The live site sends /blog/ to the only archive page. Cloudflare applies _redirects before serving files,
-# so this wins over the (empty) /blog/ the content system generates; no "!" is needed (that is Netlify-only syntax).
-# Remove these two lines once posts are published through the system.
-/blog/ /category-uncategorized/ 301
-/blog /category-uncategorized/ 301
-
 # Pricing page not live: send to pricing section on Services
 /seo-pricing/ /seo-services/#what-we-do 301
 /seo-pricing /seo-services/#what-we-do 301
